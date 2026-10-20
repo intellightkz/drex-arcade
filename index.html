@@ -9,7 +9,7 @@
 <meta property="og:description" content="Watch a decision model play. Then try to beat it.">
 <meta property="og:image" content="https://drex-arcade.vercel.app/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500;700;800&family=Onest:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="shared.css">
@@ -18,7 +18,7 @@
   .hero { display: grid; gap: 14px; padding-block: 10px 4px; }
   .hero h1 { font-size: clamp(44px, 8vw, 92px); max-width: 15ch; }
   .hero h1 em { font-style: normal; color: var(--accent); }
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px 22px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 30px 22px; }
   .tile { display: grid; gap: 10px; align-content: start; text-decoration: none; color: var(--ink); }
   .tile .paper { padding: 16px 18px; display: grid; gap: 12px; transition: transform .15s; }
   .tile:hover .paper { transform: translateY(-3px); }
@@ -34,10 +34,10 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar"><a class="brand" href="./"><i></i>nace.ai · Drex Arcade</a><nav><a href="beat/">Beat Drex</a><a href="d-rex/">D-Rex</a><a href="stack/">Drex Stack</a></nav></div>
+  <div class="topbar"><a class="brand" href="./"><img src="nace.png" alt="">nace.ai · Drex Arcade</a><nav><a href="beat/">Beat Drex</a><a href="drexman/">Drexman</a><a href="d-rex/">D-Rex</a><a href="stack/">Drex Stack</a></nav></div>
 
   <section class="hero">
-    <div class="sec-head"><div class="row"><span class="label">Decision model arcade</span><span class="meta">real Drex API answers · recorded 19 Oct 2026</span></div></div>
+    <div class="sec-head"><div class="row"><span class="label">Decision model arcade</span><span class="meta">real Drex API answers · recorded 19–20 Oct 2026</span></div></div>
     <h1>Watch a decision model play. Then try to <em>beat it.</em></h1>
     <p class="subtitle">Drex reads the situation and returns a probability for every move it could make. No text to parse, no guessing what it meant.</p>
   </section>
@@ -50,6 +50,15 @@
         <div class="nums"><div><span class="num" id="b-right">…</span><span class="caps">sorted right</span></div><div><span class="num" id="b-ms">…</span><span class="caps">per message</span></div><div><span class="num">4 s</span><span class="caps">you get</span></div></div>
         <div class="odds"><div class="row pick"><span>spam / scam</span><span>100%</span></div><div class="row"><span>urgent</span><span>0%</span></div><div class="row"><span>can wait</span><span>0%</span></div></div>
         <span class="play">Play >>></span>
+      </div>
+    </a>
+    <a class="tile" href="drexman/">
+      <div class="sec-head"><div class="row"><span class="label">Pac-Man</span><span class="meta">Drex Max · best of 3 games</span></div><span class="subtitle">picks a way at every junction, with odds for each</span></div>
+      <div class="paper">
+        <span class="name">Drexman</span>
+        <div class="nums"><div><span class="num" id="p-score">…</span><span class="caps">score</span></div><div><span class="num" id="p-dec">…</span><span class="caps">decisions</span></div><div><span class="num" id="p-ms">…</span><span class="caps">per answer</span></div></div>
+        <div class="odds" id="p-odds"></div>
+        <span class="play">Watch it play >>></span>
       </div>
     </a>
     <a class="tile" href="d-rex/">
@@ -77,19 +86,28 @@
     <a class="btn accent" href="https://console.nace.ai/?utm_source=arcade&amp;utm_medium=site&amp;utm_campaign=drex10000&amp;utm_content=home">Get an API key</a>
   </section>
 
-  <footer class="wordmark"><span class="big">Drex <em>Arcade</em></span><span class="tag">drexmaxxing >>></span></footer>
-  <p class="note">Made by Nace.AI. Every replay uses real answers from the hosted Drex API, recorded on 19 Oct 2026 one request at a time; the times shown are those round trips. <a href="https://nace.ai/developers">Docs and models</a> · <a href="https://huggingface.co/nace-ai">Hugging Face</a> · <a href="https://openrouter.ai/nace-ai">OpenRouter</a></p>
+  <footer class="wordmark"><span class="lockup"><img src="nace.png" alt="Nace.AI"><span class="big">Drex <em>Arcade</em></span></span><span class="tag">drexmaxxing >>></span></footer>
+  <p class="note">Made by Nace.AI. Every replay uses real answers from the hosted Drex API, recorded on 19–20 Oct 2026 one request at a time; the times shown are those round trips. Drexman shows the best of three Drex Max games recorded with jevman’s own bench (classic ghosts, 300 s cap); the three scored 2,880, 3,320 and 3,690. <a href="https://nace.ai/developers">Docs and models</a> · <a href="https://huggingface.co/nace-ai">Hugging Face</a> · <a href="https://openrouter.ai/nace-ai">OpenRouter</a></p>
 </div>
 <script type="module">
 // Headline numbers come straight from the recordings.
 const get = (p) => fetch(p).then((r) => (r.ok ? r.json() : null)).catch(() => null);
 const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-const [beat, stack, race] = await Promise.all([get('beat/answers.json'), get('stack/replay.json'), get('d-rex/replay.json')]);
+const [beat, stack, race, pac] = await Promise.all([get('beat/answers.json'), get('stack/replay.json'), get('d-rex/replay.json'), get('drexman/demo/drex-max.json')]);
 if (beat) {
   const { MESSAGES } = await import('./beat/messages.js');
   const a = beat.answers['drex-max'];
   set('b-right', `${a.filter((x, i) => x.choice === MESSAGES[i].label).length}/${a.length}`);
   set('b-ms', `${(a.reduce((s, x) => s + x.ms, 0) / a.length / 1000).toFixed(2)} s`);
+}
+if (pac) {
+  const calls = pac.events.filter(([, e]) => e.type === 'call'), picks = pac.events.filter(([, e]) => e.type === 'decision').map(([, e]) => e.decision);
+  set('p-score', pac.final.score.toLocaleString('en-US')); set('p-dec', picks.length);
+  set('p-ms', `${(calls.reduce((s, [, e]) => s + e.latencyMs, 0) / calls.length / 1000).toFixed(2)} s`);
+  // A real junction from the game: three ways open and a clear but not certain pick
+  const d = picks.find((x) => x.options.length === 3 && x.probabilities[x.choice] > 0.6 && x.probabilities[x.choice] < 0.95) ?? picks[0];
+  const rows = Object.entries(d.probabilities).sort((a, b) => b[1] - a[1]);
+  document.getElementById('p-odds').innerHTML = rows.map(([k, p]) => `<div class="row ${k === d.choice ? 'pick' : ''}"><span>${k}</span><span>${Math.round(p * 100)}%</span></div>`).join('');
 }
 if (race) {
   const dx = await import('./d-rex/engine.js');

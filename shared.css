@@ -21,7 +21,7 @@ p { margin: 0; }
 /* Top bar */
 .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-family: var(--display); font-size: 13.5px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
 .topbar .brand { font-weight: 700; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; letter-spacing: .02em; }
-.topbar .brand i { width: 16px; height: 16px; background: var(--accent); display: inline-block; border-radius: 3px; transform: rotate(45deg) scale(.8); }
+.topbar .brand img { width: 24px; height: auto; display: block; }
 .topbar nav { display: flex; gap: 18px; flex-wrap: wrap; }
 .topbar nav a { color: var(--muted); text-decoration: none; text-transform: uppercase; letter-spacing: .06em; font-size: 12.5px; }
 .topbar nav a[aria-current="page"], .topbar nav a:hover { color: var(--accent); }
@@ -56,6 +56,8 @@ p { margin: 0; }
 
 /* Big wordmark footer, like the post's "Drex Max" */
 .wordmark { display: grid; gap: 6px; justify-items: center; padding-block: 28px 8px; border-top: 1px solid var(--line); }
+.wordmark .lockup { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 26px); }
+.wordmark .lockup img { width: clamp(50px, 8vw, 104px); height: auto; }
 .wordmark .big { font: 400 clamp(56px, 12vw, 132px)/0.95 var(--serif); letter-spacing: -0.02em; }
 .wordmark .big em { font-style: normal; color: var(--accent); }
 .wordmark .tag { font: 700 clamp(16px, 2.4vw, 22px) var(--display); color: var(--accent); letter-spacing: .02em; }
@@ -64,5 +66,6 @@ p { margin: 0; }
 .clip .topbar, .clip .cta, .clip .note, .clip .no-clip { display: none !important; }
 .clip .wordmark { padding-block: 14px 0; }
 .clip .wordmark .big { font-size: clamp(40px, 6vw, 64px); }
+.clip .wordmark .lockup img { width: clamp(36px, 5vw, 56px); }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

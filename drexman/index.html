@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>Drexman · Watch Drex play Pac-Man</title>
+    <meta name="description" content="Watch Drex Max, the decision model by Nace.AI, play Pac-Man. Then steer Pac-Man yourself." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Drex Arcade" />
+    <meta property="og:title" content="Drexman: watch Drex play Pac-Man" />
+    <meta property="og:description" content="A decision model picks Pac-Man's turn at every junction, with a probability for each way." />
+    <meta property="og:image" content="https://drex-arcade.vercel.app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="module" crossorigin src="./assets/main-q1L3jUzq.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/main-CbfiR4Rv.css">
+  </head>
+  <body>
+    <header class="appbar">
+      <div class="appbar-inner">
+        <a class="brand" href="../">
+          <span class="logo" aria-hidden="true"></span>
+          <div>
+            <h1>Drexman</h1>
+            <p>Watch Drex play Pac-Man, or try to beat it</p>
+          </div>
+        </a>
+        <nav class="tabs" aria-label="Site">
+          <a href="./" aria-current="page">Play</a>
+          <a href="../">Drex Arcade</a>
+        </nav>
+        <div class="appbar-end">
+          <a class="gh" href="https://github.com/joch/jevman" target="_blank" rel="noopener">Fork of jevman by Johnny Chadda ↗</a>
+          <a class="gh" href="source.tar.gz">Source (AGPL-3.0)</a>
+          <div id="account" class="account" aria-live="polite"></div>
+        </div>
+      </div>
+    </header>
+    <div class="page">
+    <main class="layout">
+      <section class="game">
+        <header class="hud">
+          <span>Score <b id="score">0</b></span>
+          <span>Level <b id="level">1</b></span>
+          <span>Lives <b id="lives">3</b></span>
+          <span>Fruit <b id="fruit-hud"></b></span>
+        </header>
+        <div class="board">
+          <canvas id="game" aria-label="Pac-Man game board"></canvas>
+          <div id="overlay" class="overlay" role="dialog" aria-modal="false" hidden></div>
+          <button id="play-cta" class="play-cta" type="button" hidden>▶ Play</button>
+        </div>
+        <div class="dpad" id="dpad" hidden aria-label="Steer Pac-Man">
+          <button type="button" data-dir="up" aria-label="Up">▲</button>
+          <button type="button" data-dir="left" aria-label="Left">◀</button>
+          <button type="button" data-dir="down" aria-label="Down">▼</button>
+          <button type="button" data-dir="right" aria-label="Right">▶</button>
+        </div>
+        <div class="controls">
+          <button id="toggle-pacman" aria-pressed="true">Pac-Man: AI</button>
+          <label>Speed <input id="speed" type="range" min="0.25" max="1" step="0.05" value="1" /> <output id="speed-out">1.00×</output></label>
+          <button id="pause">Pause</button>
+          <button id="restart">Restart</button>
+          <button id="mute" aria-pressed="false" aria-label="Sound">🔊</button>
+        </div>
+        <p class="help">Arrows/WASD or swipe steer when you play Pac-Man · J: Pac-Man to the AI or back · P pause · R restart</p>
+      </section>
+      <aside id="panel" aria-label="Decisions"></aside>
+    </main>
+    </div>
+  </body>
+</html>
