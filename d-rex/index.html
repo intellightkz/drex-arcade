@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>D-Rex</title>
+<meta name="description" content="Drex Max and Drex v2.0 race in an endless runner where the time to answer keeps shrinking.">
+<meta property="og:title" content="D-Rex: Drex Max vs Drex v2.0">
+<meta property="og:description" content="An endless runner where a decision model reads every obstacle and the time to answer keeps shrinking.">
+<meta property="og:image" content="https://drex-arcade.vercel.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500;700;800&family=Onest:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../shared.css">
+<script>if (/[?&]clip\b/.test(location.search)) document.documentElement.classList.add('clip');</script>
+<style>
+  .head { display: flex; justify-content: space-between; align-items: end; gap: 18px; flex-wrap: wrap; }
+  .head h1 { font-size: clamp(48px, 8vw, 84px); }
+  .head .subtitle { max-width: 64ch; margin-top: 8px; }
+  #lanes { display: grid; gap: 22px; }
+  .lane { display: grid; gap: 8px; }
+  .lane .stats { font-variant-numeric: tabular-nums; }
+  .lane .paper { overflow: hidden; }
+  canvas { display: block; width: 100%; height: auto; }
+  .log { font: 12px var(--display); color: var(--paper-muted); padding: 7px 14px 9px; border-top: 1px solid var(--paper-line); min-height: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .result { padding: 18px 20px; display: grid; gap: 14px; }
+  .result .verdict { font: 400 clamp(26px, 4vw, 36px)/1.1 var(--serif); }
+  .result .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .result .nums div { display: grid; gap: 3px; border-top: 1px solid var(--paper-line); padding-top: 8px; }
+  .result .nums .win .num { color: var(--accent-ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar"><a class="brand" href="../"><i></i>nace.ai · Drex Arcade</a><nav><a href="../beat/">Beat Drex</a><a href="./" aria-current="page">D-Rex</a><a href="../stack/">Drex Stack</a></nav></div>
+  <div class="sec-head"><div class="row"><span class="label">Real-time decisions</span><span class="meta">real time · same obstacles</span></div><span class="subtitle">jump, duck or do nothing, decided per obstacle</span></div>
+  <div class="head">
+    <div><h1>D-Rex</h1><p class="subtitle">Every obstacle is described in words. Drex picks jump, duck or nothing. The game keeps speeding up, so the time to answer keeps shrinking. Too late, and the dino runs into it.</p></div>
+    <div><button class="btn primary" id="start" type="button">Play the race</button></div>
+  </div>
+  <div id="lanes"></div>
+  <div class="paper result" id="result" hidden></div>
+  <section class="cta">
+    <p><b>Fast, typed decisions for agents:</b> pick a tool, route a ticket, gate an action. New accounts get $25 of credit.</p>
+    <a class="btn accent" href="https://console.nace.ai/?utm_source=arcade&amp;utm_medium=game&amp;utm_campaign=drex10000&amp;utm_content=d-rex">Get an API key</a>
+  </section>
+  <footer class="wordmark"><span class="big">Drex <em>Max</em></span><span class="tag">drexmaxxing >>></span></footer>
+  <p class="note">Replay of real Drex API answers recorded on 19 Oct 2026, one request at a time. Each answer arrives in the game after its measured round-trip time, so speed matters exactly as it did live. Add <a href="?clip">?clip</a> to the address for a clean frame to screen-record.</p>
+</div>
+<script type="module">
+import { W, H, GROUND, DINO_X, DUCK_H, DINO_H, ASK_PX, SPEED0, STEP, schedule, speedAt, travelled, obstacleX, newLane, stepLane } from './engine.js';
+const replay = await fetch('replay.json').then((r) => r.json());
+const LANES = [ { model: 'drex-max', name: 'Drex Max' }, { model: 'drex-v2.0', name: 'Drex v2.0' } ];
+const sched = schedule(replay.seed, 400);
+const SERIF = '"Instrument Serif", Georgia, serif', MONO = '"JetBrains Mono", ui-monospace, monospace';
+// The canvases sit on cream paper, so they draw with the paper tokens.
+const TOKENS = { surface: 'paper', ink: 'paper-ink', muted: 'paper-muted', line: 'paper-line', accent: 'accent-ink', bad: 'bad-ink' };
+let colors = {};
+const readColors = () => { const s = getComputedStyle(document.documentElement); colors = Object.fromEntries(Object.entries(TOKENS).map(([k, v]) => [k, s.getPropertyValue('--' + v).trim()])); };
+readColors();
+
+const lanes = LANES.map((cfg) => {
+  const el = document.createElement('section');
+  el.className = 'lane';
+  el.innerHTML = `<div class="sec-head"><div class="row"><span class="label">${cfg.name}</span><span class="meta stats"></span></div></div><div class="paper"><canvas width="${W}" height="${H}"></canvas><div class="log"></div></div>`;
+  document.getElementById('lanes').appendChild(el);
+  return { cfg, run: replay.runs[cfg.model], ctx: el.querySelector('canvas').getContext('2d'), statsEl: el.querySelector('.stats'), logEl: el.querySelector('.log') };
+});
+function reset() { for (const l of lanes) { Object.assign(l, newLane(l.run)); l.logEl.textContent = l.log; draw(l, 0); } document.getElementById('result').hidden = true; }
+
+function draw(l, t) {
+  const c = l.ctx, tt = l.alive ? t : l.diedAt;
+  c.fillStyle = colors.surface; c.fillRect(0, 0, W, H);
+  c.fillStyle = colors.ink; c.fillRect(0, GROUND, W, 2);
+  const off = travelled(tt) % 60;
+  c.fillStyle = colors.muted;
+  for (let x = -off; x < W; x += 60) { c.fillRect(x + 10, GROUND + 8, 4, 2); c.fillRect(x + 37, GROUND + 14, 2, 2); }
+  for (const o of sched) {
+    if (o.t > tt) break;
+    const x = obstacleX(o, tt);
+    if (x + o.kind.w < 0 || x > W) continue;
+    const top = GROUND - o.kind.lift - o.kind.h;
+    c.fillStyle = colors.ink;
+    if (o.kind.id.startsWith('cactus')) {
+      c.fillRect(x + o.kind.w / 2 - 4, top, 8, o.kind.h); c.fillRect(x, top + 10, 6, 12); c.fillRect(x + o.kind.w - 6, top + 6, 6, 14);
+      if (o.kind.id === 'cactus-tall') { c.fillRect(x + 4, top + 4, 7, o.kind.h - 4); c.fillRect(x + o.kind.w - 11, top + 8, 7, o.kind.h - 8); }
+    } else {
+      const flap = Math.floor(tt * 6) % 2;
+      c.fillRect(x + 8, top + 8, 26, 8); c.fillRect(x, top + 10, 10, 4); c.fillRect(x + 14, flap ? top : top + 14, 10, 10);
+    }
+    const rec = l.decided.get(o);
+    if (rec && x > DINO_X - 20) {
+      // A small "Drex's eye" card: serif option, thin rule, mono percent
+      const bx = Math.min(W - 176, Math.max(6, x - 50)), by = 10;
+      if (rec.status === 'asking') { c.fillStyle = colors.muted; c.font = `italic 18px ${SERIF}`; c.fillText('thinking…', bx, by + 16); }
+      if (rec.status === 'ready') ['jump', 'duck', 'nothing'].forEach((k, i) => {
+        const p = rec.probs?.[k] ?? 0, yy = by + i * 21, pick = k === rec.choice;
+        c.fillStyle = pick ? colors.accent : colors.muted;
+        c.font = `18px ${SERIF}`; c.fillText(k, bx, yy + 15);
+        c.font = `500 13px ${MONO}`; c.textAlign = 'right'; c.fillText(`${Math.round(p * 100)}%`, bx + 168, yy + 15); c.textAlign = 'left';
+        c.fillStyle = colors.line; c.fillRect(bx, yy + 19, 168, 1);
+        c.fillStyle = pick ? colors.accent : colors.muted; c.fillRect(bx, yy + 19, Math.max(2, p * 168), pick ? 2 : 1);
+      });
+    }
+  }
+  const duck = l.ducking && l.y === 0, dx = DINO_X, dy = GROUND - l.y - (duck ? DUCK_H : DINO_H);
+  c.fillStyle = l.alive ? colors.ink : colors.bad;
+  if (duck) { c.fillRect(dx, dy + 6, 40, 16); c.fillRect(dx + 30, dy, 24, 14); c.fillRect(dx + 6, dy + 22, 6, 4); c.fillRect(dx + 26, dy + 22, 6, 4); }
+  else {
+    c.fillRect(dx + 18, dy, 22, 16); c.fillRect(dx + 8, dy + 14, 22, 20); c.fillRect(dx, dy + 18, 10, 8); c.fillRect(dx + 28, dy + 20, 8, 4);
+    const leg = Math.floor(tt * 10) % 2 && l.y === 0; c.fillRect(dx + 10, dy + 34, 6, leg ? 6 : 10); c.fillRect(dx + 22, dy + 34, 6, leg ? 10 : 6);
+  }
+  c.fillStyle = colors.surface; c.fillRect(dx + 32, dy + 3, 3, 3);
+  const score = Math.floor(travelled(tt) / 10), spd = speedAt(tt);
+  c.textAlign = 'right';
+  c.fillStyle = colors.ink; c.font = `34px ${SERIF}`; c.fillText(score.toLocaleString('en-US'), W - 16, 38);
+  c.fillStyle = colors.muted; c.font = `500 10.5px ${MONO}`; c.fillText(`DISTANCE · ${(spd / SPEED0).toFixed(1)}× SPEED`, W - 16, 54);
+  c.textAlign = 'left';
+  if (!l.alive) { c.fillStyle = colors.bad; c.font = `italic 34px ${SERIF}`; c.textAlign = 'center'; c.fillText('game over', W / 2, 100); c.textAlign = 'left'; }
+  const avg = l.latency.length ? Math.round(l.latency.reduce((a, b) => a + b, 0) / l.latency.length) : 0;
+  l.statsEl.textContent = `${(ASK_PX / spd).toFixed(2)} s to answer · ${l.latency.length} decisions · ${l.late} late · ${avg} ms avg`;
+}
+
+let running = false, simT = 0, acc = 0, last = 0;
+function frame(now) {
+  if (!running) return;
+  acc += Math.min(0.5, (now - last) / 1000); last = now; // catch up on slow or throttled frames
+  while (acc >= STEP) { simT += STEP; acc -= STEP; for (const l of lanes) stepLane(l, simT, sched); }
+  for (const l of lanes) { draw(l, simT); if (l.logEl.textContent !== l.log) l.logEl.textContent = l.log; }
+  if (lanes.every((l) => !l.alive)) { running = false; showResult(); return; }
+  requestAnimationFrame(frame);
+}
+function showResult() {
+  const rs = lanes.map((l) => ({ name: l.cfg.name, score: Math.floor(travelled(l.diedAt) / 10), speed: (l.diedSpeed / SPEED0).toFixed(1), answer: (ASK_PX / l.diedSpeed).toFixed(2) }));
+  const win = rs[0].score >= rs[1].score ? rs[0] : rs[1], lose = win === rs[0] ? rs[1] : rs[0];
+  const el = document.getElementById('result');
+  el.hidden = false;
+  el.innerHTML = `<span class="caps">Result</span><span class="verdict">${win.name} ran to ${win.score.toLocaleString('en-US')}.</span>
+    <div class="nums">${rs.map((r) => `<div class="${r === win ? 'win' : ''}"><span class="num">${r.score.toLocaleString('en-US')}</span><span class="caps">${r.name} · ${r.speed}× speed · ${r.answer} s to answer at the end</span></div>`).join('')}</div>`;
+  document.getElementById('start').textContent = 'Replay the race';
+}
+document.getElementById('start').addEventListener('click', () => { if (running) return; reset(); simT = 0; acc = 0; running = true; last = performance.now(); requestAnimationFrame(frame); });
+reset();
+document.fonts.ready.then(() => { if (!running) for (const l of lanes) draw(l, 0); });
+</script>
+</body>
+</html>

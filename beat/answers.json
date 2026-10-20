@@ -1,0 +1,803 @@
+{
+ "recordedAt": "2026-10-19T18:54:28.900Z",
+ "api": "https://console.nace.ai/v1/systemone",
+ "note": "Real Drex API answers, one request at a time.",
+ "answers": {
+  "drex-max": [
+   {
+    "id": "s1",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9997,
+     "later": 0.0002,
+     "urgent": 0.0001
+    },
+    "ms": 743,
+    "evalMs": 80
+   },
+   {
+    "id": "s2",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9999,
+     "urgent": 0.0001,
+     "later": 0
+    },
+    "ms": 330,
+    "evalMs": 74
+   },
+   {
+    "id": "s3",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9997,
+     "later": 0.0002,
+     "urgent": 0.0001
+    },
+    "ms": 335,
+    "evalMs": 72
+   },
+   {
+    "id": "s4",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.999,
+     "later": 0.0008,
+     "urgent": 0.0002
+    },
+    "ms": 324,
+    "evalMs": 72
+   },
+   {
+    "id": "s5",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9995,
+     "later": 0.0003,
+     "urgent": 0.0002
+    },
+    "ms": 340,
+    "evalMs": 82
+   },
+   {
+    "id": "s6",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9998,
+     "later": 0.0002,
+     "urgent": 0
+    },
+    "ms": 320,
+    "evalMs": 74
+   },
+   {
+    "id": "s7",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9999,
+     "urgent": 0.0001,
+     "later": 0
+    },
+    "ms": 334,
+    "evalMs": 73
+   },
+   {
+    "id": "s8",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9988,
+     "later": 0.001,
+     "urgent": 0.0002
+    },
+    "ms": 324,
+    "evalMs": 74
+   },
+   {
+    "id": "s9",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9997,
+     "later": 0.0002,
+     "urgent": 0.0001
+    },
+    "ms": 412,
+    "evalMs": 81
+   },
+   {
+    "id": "s10",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9994,
+     "urgent": 0.0004,
+     "later": 0.0002
+    },
+    "ms": 330,
+    "evalMs": 81
+   },
+   {
+    "id": "s11",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9998,
+     "urgent": 0.0001,
+     "later": 0.0001
+    },
+    "ms": 328,
+    "evalMs": 82
+   },
+   {
+    "id": "s12",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9999,
+     "later": 0.0001,
+     "urgent": 0
+    },
+    "ms": 329,
+    "evalMs": 77
+   },
+   {
+    "id": "u1",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9993,
+     "later": 0.0006,
+     "spam": 0.0001
+    },
+    "ms": 345,
+    "evalMs": 77
+   },
+   {
+    "id": "u2",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9991,
+     "later": 0.0008,
+     "spam": 0.0001
+    },
+    "ms": 316,
+    "evalMs": 75
+   },
+   {
+    "id": "u3",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9969,
+     "later": 0.0026,
+     "spam": 0.0005
+    },
+    "ms": 326,
+    "evalMs": 79
+   },
+   {
+    "id": "u4",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9989,
+     "spam": 0.0006,
+     "later": 0.0005
+    },
+    "ms": 366,
+    "evalMs": 74
+   },
+   {
+    "id": "u5",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9987,
+     "later": 0.0011,
+     "spam": 0.0002
+    },
+    "ms": 329,
+    "evalMs": 82
+   },
+   {
+    "id": "u6",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9963,
+     "later": 0.0033,
+     "spam": 0.0003
+    },
+    "ms": 331,
+    "evalMs": 82
+   },
+   {
+    "id": "u7",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9992,
+     "later": 0.0007,
+     "spam": 0.0001
+    },
+    "ms": 327,
+    "evalMs": 76
+   },
+   {
+    "id": "u8",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9961,
+     "later": 0.0029,
+     "spam": 0.001
+    },
+    "ms": 334,
+    "evalMs": 77
+   },
+   {
+    "id": "u9",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.998,
+     "later": 0.0017,
+     "spam": 0.0003
+    },
+    "ms": 397,
+    "evalMs": 80
+   },
+   {
+    "id": "u10",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9951,
+     "later": 0.0033,
+     "spam": 0.0016
+    },
+    "ms": 318,
+    "evalMs": 80
+   },
+   {
+    "id": "u11",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9991,
+     "later": 0.0008,
+     "spam": 0.0001
+    },
+    "ms": 335,
+    "evalMs": 77
+   },
+   {
+    "id": "u12",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9968,
+     "later": 0.0024,
+     "spam": 0.0008
+    },
+    "ms": 371,
+    "evalMs": 81
+   },
+   {
+    "id": "l1",
+    "choice": "later",
+    "probs": {
+     "later": 0.9994,
+     "spam": 0.0005,
+     "urgent": 0.0001
+    },
+    "ms": 323,
+    "evalMs": 71
+   },
+   {
+    "id": "l2",
+    "choice": "later",
+    "probs": {
+     "later": 0.9991,
+     "urgent": 0.0007,
+     "spam": 0.0002
+    },
+    "ms": 315,
+    "evalMs": 74
+   },
+   {
+    "id": "l3",
+    "choice": "later",
+    "probs": {
+     "later": 0.9763,
+     "urgent": 0.0223,
+     "spam": 0.0014
+    },
+    "ms": 330,
+    "evalMs": 81
+   },
+   {
+    "id": "l4",
+    "choice": "later",
+    "probs": {
+     "later": 0.9997,
+     "urgent": 0.0003,
+     "spam": 0.0001
+    },
+    "ms": 319,
+    "evalMs": 71
+   },
+   {
+    "id": "l5",
+    "choice": "later",
+    "probs": {
+     "later": 0.9996,
+     "urgent": 0.0003,
+     "spam": 0.0001
+    },
+    "ms": 321,
+    "evalMs": 73
+   },
+   {
+    "id": "l6",
+    "choice": "later",
+    "probs": {
+     "later": 0.9997,
+     "urgent": 0.0003,
+     "spam": 0.0001
+    },
+    "ms": 325,
+    "evalMs": 78
+   },
+   {
+    "id": "l7",
+    "choice": "later",
+    "probs": {
+     "later": 0.9993,
+     "urgent": 0.0005,
+     "spam": 0.0002
+    },
+    "ms": 333,
+    "evalMs": 80
+   },
+   {
+    "id": "l8",
+    "choice": "later",
+    "probs": {
+     "later": 0.9984,
+     "urgent": 0.0012,
+     "spam": 0.0004
+    },
+    "ms": 367,
+    "evalMs": 81
+   },
+   {
+    "id": "l9",
+    "choice": "later",
+    "probs": {
+     "later": 0.9992,
+     "urgent": 0.0006,
+     "spam": 0.0002
+    },
+    "ms": 337,
+    "evalMs": 82
+   },
+   {
+    "id": "l10",
+    "choice": "later",
+    "probs": {
+     "later": 0.9975,
+     "spam": 0.0013,
+     "urgent": 0.0012
+    },
+    "ms": 316,
+    "evalMs": 77
+   },
+   {
+    "id": "l11",
+    "choice": "later",
+    "probs": {
+     "later": 0.9945,
+     "urgent": 0.0043,
+     "spam": 0.0012
+    },
+    "ms": 323,
+    "evalMs": 76
+   },
+   {
+    "id": "l12",
+    "choice": "later",
+    "probs": {
+     "later": 0.9856,
+     "spam": 0.0129,
+     "urgent": 0.0015
+    },
+    "ms": 327,
+    "evalMs": 80
+   }
+  ],
+  "drex-v2.0": [
+   {
+    "id": "s1",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9994,
+     "later": 0.0005,
+     "urgent": 0.0001
+    },
+    "ms": 359,
+    "evalMs": 21
+   },
+   {
+    "id": "s2",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9969,
+     "later": 0.0017,
+     "urgent": 0.0014
+    },
+    "ms": 398,
+    "evalMs": 20
+   },
+   {
+    "id": "s3",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9997,
+     "later": 0.0003,
+     "urgent": 0.0001
+    },
+    "ms": 370,
+    "evalMs": 20
+   },
+   {
+    "id": "s4",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9986,
+     "later": 0.0012,
+     "urgent": 0.0001
+    },
+    "ms": 359,
+    "evalMs": 16
+   },
+   {
+    "id": "s5",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9956,
+     "later": 0.004,
+     "urgent": 0.0005
+    },
+    "ms": 356,
+    "evalMs": 17
+   },
+   {
+    "id": "s6",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9985,
+     "later": 0.0012,
+     "urgent": 0.0003
+    },
+    "ms": 351,
+    "evalMs": 20
+   },
+   {
+    "id": "s7",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9954,
+     "later": 0.0027,
+     "urgent": 0.0019
+    },
+    "ms": 442,
+    "evalMs": 20
+   },
+   {
+    "id": "s8",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9946,
+     "later": 0.0046,
+     "urgent": 0.0008
+    },
+    "ms": 349,
+    "evalMs": 19
+   },
+   {
+    "id": "s9",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9987,
+     "later": 0.0012,
+     "urgent": 0.0001
+    },
+    "ms": 371,
+    "evalMs": 16
+   },
+   {
+    "id": "s10",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9905,
+     "urgent": 0.0052,
+     "later": 0.0043
+    },
+    "ms": 351,
+    "evalMs": 18
+   },
+   {
+    "id": "s11",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9993,
+     "later": 0.0005,
+     "urgent": 0.0001
+    },
+    "ms": 357,
+    "evalMs": 20
+   },
+   {
+    "id": "s12",
+    "choice": "spam",
+    "probs": {
+     "spam": 0.9997,
+     "later": 0.0002,
+     "urgent": 0
+    },
+    "ms": 346,
+    "evalMs": 17
+   },
+   {
+    "id": "u1",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9958,
+     "later": 0.0039,
+     "spam": 0.0003
+    },
+    "ms": 348,
+    "evalMs": 16
+   },
+   {
+    "id": "u2",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.964,
+     "later": 0.0325,
+     "spam": 0.0036
+    },
+    "ms": 347,
+    "evalMs": 18
+   },
+   {
+    "id": "u3",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9683,
+     "later": 0.0273,
+     "spam": 0.0044
+    },
+    "ms": 344,
+    "evalMs": 16
+   },
+   {
+    "id": "u4",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.926,
+     "later": 0.0466,
+     "spam": 0.0274
+    },
+    "ms": 408,
+    "evalMs": 18
+   },
+   {
+    "id": "u5",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9907,
+     "later": 0.0081,
+     "spam": 0.0012
+    },
+    "ms": 353,
+    "evalMs": 18
+   },
+   {
+    "id": "u6",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.8527,
+     "later": 0.1351,
+     "spam": 0.0122
+    },
+    "ms": 357,
+    "evalMs": 17
+   },
+   {
+    "id": "u7",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9898,
+     "later": 0.0094,
+     "spam": 0.0008
+    },
+    "ms": 355,
+    "evalMs": 21
+   },
+   {
+    "id": "u8",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.7234,
+     "later": 0.142,
+     "spam": 0.1346
+    },
+    "ms": 343,
+    "evalMs": 19
+   },
+   {
+    "id": "u9",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9299,
+     "later": 0.0668,
+     "spam": 0.0033
+    },
+    "ms": 351,
+    "evalMs": 17
+   },
+   {
+    "id": "u10",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.7216,
+     "later": 0.1648,
+     "spam": 0.1135
+    },
+    "ms": 348,
+    "evalMs": 17
+   },
+   {
+    "id": "u11",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.7799,
+     "later": 0.2131,
+     "spam": 0.007
+    },
+    "ms": 342,
+    "evalMs": 17
+   },
+   {
+    "id": "u12",
+    "choice": "urgent",
+    "probs": {
+     "urgent": 0.9748,
+     "later": 0.0222,
+     "spam": 0.003
+    },
+    "ms": 349,
+    "evalMs": 18
+   },
+   {
+    "id": "l1",
+    "choice": "later",
+    "probs": {
+     "later": 0.9977,
+     "spam": 0.002,
+     "urgent": 0.0003
+    },
+    "ms": 340,
+    "evalMs": 18
+   },
+   {
+    "id": "l2",
+    "choice": "later",
+    "probs": {
+     "later": 0.9958,
+     "urgent": 0.0034,
+     "spam": 0.0009
+    },
+    "ms": 348,
+    "evalMs": 18
+   },
+   {
+    "id": "l3",
+    "choice": "later",
+    "probs": {
+     "later": 0.9535,
+     "urgent": 0.0322,
+     "spam": 0.0143
+    },
+    "ms": 427,
+    "evalMs": 17
+   },
+   {
+    "id": "l4",
+    "choice": "later",
+    "probs": {
+     "later": 0.9923,
+     "urgent": 0.0059,
+     "spam": 0.0018
+    },
+    "ms": 383,
+    "evalMs": 16
+   },
+   {
+    "id": "l5",
+    "choice": "later",
+    "probs": {
+     "later": 0.9907,
+     "spam": 0.006,
+     "urgent": 0.0033
+    },
+    "ms": 352,
+    "evalMs": 19
+   },
+   {
+    "id": "l6",
+    "choice": "later",
+    "probs": {
+     "later": 0.9811,
+     "spam": 0.0096,
+     "urgent": 0.0094
+    },
+    "ms": 384,
+    "evalMs": 19
+   },
+   {
+    "id": "l7",
+    "choice": "later",
+    "probs": {
+     "later": 0.9966,
+     "urgent": 0.0019,
+     "spam": 0.0015
+    },
+    "ms": 355,
+    "evalMs": 18
+   },
+   {
+    "id": "l8",
+    "choice": "later",
+    "probs": {
+     "later": 0.9738,
+     "spam": 0.0146,
+     "urgent": 0.0116
+    },
+    "ms": 354,
+    "evalMs": 18
+   },
+   {
+    "id": "l9",
+    "choice": "later",
+    "probs": {
+     "later": 0.9822,
+     "urgent": 0.0102,
+     "spam": 0.0076
+    },
+    "ms": 351,
+    "evalMs": 19
+   },
+   {
+    "id": "l10",
+    "choice": "later",
+    "probs": {
+     "later": 0.9726,
+     "spam": 0.0212,
+     "urgent": 0.0062
+    },
+    "ms": 352,
+    "evalMs": 17
+   },
+   {
+    "id": "l11",
+    "choice": "later",
+    "probs": {
+     "later": 0.9141,
+     "spam": 0.0477,
+     "urgent": 0.0382
+    },
+    "ms": 347,
+    "evalMs": 17
+   },
+   {
+    "id": "l12",
+    "choice": "later",
+    "probs": {
+     "later": 0.9491,
+     "spam": 0.0468,
+     "urgent": 0.0041
+    },
+    "ms": 342,
+    "evalMs": 17
+   }
+  ]
+ }
+}

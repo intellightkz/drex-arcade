@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drex Arcade</title>
+<meta name="description" content="Watch Drex, the decision model by Nace.AI, play games. Then try to beat it at sorting an inbox.">
+<meta property="og:title" content="Drex Arcade">
+<meta property="og:description" content="Watch a decision model play. Then try to beat it.">
+<meta property="og:image" content="https://drex-arcade.vercel.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500;700;800&family=Onest:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="shared.css">
+<script>if (/[?&]clip\b/.test(location.search)) document.documentElement.classList.add('clip');</script>
+<style>
+  .hero { display: grid; gap: 14px; padding-block: 10px 4px; }
+  .hero h1 { font-size: clamp(44px, 8vw, 92px); max-width: 15ch; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px 22px; }
+  .tile { display: grid; gap: 10px; align-content: start; text-decoration: none; color: var(--ink); }
+  .tile .paper { padding: 16px 18px; display: grid; gap: 12px; transition: transform .15s; }
+  .tile:hover .paper { transform: translateY(-3px); }
+  .tile .name { font: 400 36px/1 var(--serif); color: var(--paper-ink); }
+  .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .nums div { display: grid; gap: 3px; }
+  .odds { display: grid; gap: 4px; }
+  .odds .row { display: grid; grid-template-columns: 1fr auto; gap: 10px; font: 400 19px/1.2 var(--serif); border-bottom: 1px solid var(--paper-line); padding-bottom: 3px; }
+  .odds .row span:last-child { font: 500 13px var(--display); align-self: end; }
+  .odds .row.pick { color: var(--accent-ink); }
+  .play { font: 700 12.5px var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar"><a class="brand" href="./"><i></i>nace.ai · Drex Arcade</a><nav><a href="beat/">Beat Drex</a><a href="d-rex/">D-Rex</a><a href="stack/">Drex Stack</a></nav></div>
+
+  <section class="hero">
+    <div class="sec-head"><div class="row"><span class="label">Decision model arcade</span><span class="meta">real Drex API answers · recorded 19 Oct 2026</span></div></div>
+    <h1>Watch a decision model play. Then try to <em>beat it.</em></h1>
+    <p class="subtitle">Drex reads the situation and returns a probability for every move it could make. No text to parse, no guessing what it meant.</p>
+  </section>
+
+  <section class="tiles">
+    <a class="tile" href="beat/">
+      <div class="sec-head"><div class="row"><span class="label">You vs Drex</span><span class="meta">15 messages</span></div><span class="subtitle">sort an inbox faster and better than the model</span></div>
+      <div class="paper">
+        <span class="name">Beat Drex</span>
+        <div class="nums"><div><span class="num" id="b-right">…</span><span class="caps">sorted right</span></div><div><span class="num" id="b-ms">…</span><span class="caps">per message</span></div><div><span class="num">4 s</span><span class="caps">you get</span></div></div>
+        <div class="odds"><div class="row pick"><span>spam / scam</span><span>100%</span></div><div class="row"><span>urgent</span><span>0%</span></div><div class="row"><span>can wait</span><span>0%</span></div></div>
+        <span class="play">Play >>></span>
+      </div>
+    </a>
+    <a class="tile" href="d-rex/">
+      <div class="sec-head"><div class="row"><span class="label">Race</span><span class="meta">Drex Max vs Drex v2.0</span></div><span class="subtitle">an endless runner where the time to answer keeps shrinking</span></div>
+      <div class="paper">
+        <span class="name">D-Rex</span>
+        <div class="nums"><div><span class="num" id="d-max">…</span><span class="caps">Max distance</span></div><div><span class="num" id="d-v2">…</span><span class="caps">v2.0 distance</span></div><div><span class="num" id="d-speed">…</span><span class="caps">Max top speed</span></div></div>
+        <div class="odds"><div class="row pick"><span>duck</span><span>100%</span></div><div class="row"><span>jump</span><span>0%</span></div><div class="row"><span>nothing</span><span>0%</span></div></div>
+        <span class="play">Watch the race >>></span>
+      </div>
+    </a>
+    <a class="tile" href="stack/">
+      <div class="sec-head"><div class="row"><span class="label">Puzzle</span><span class="meta">Drex Max vs Drex v2.0</span></div><span class="subtitle">weighs up to 34 drops for every falling piece</span></div>
+      <div class="paper">
+        <span class="name">Drex Stack</span>
+        <div class="nums"><div><span class="num" id="s-max">…</span><span class="caps">Max rows</span></div><div><span class="num" id="s-v2">…</span><span class="caps">v2.0 rows</span></div><div><span class="num">150</span><span class="caps">pieces</span></div></div>
+        <div class="odds"><div class="row pick"><span>upside down, columns 8–10</span><span>81%</span></div><div class="row"><span>upside down, columns 1–3</span><span>15%</span></div><div class="row"><span>turned three times, columns 1–2</span><span>1%</span></div></div>
+        <span class="play">Watch the game >>></span>
+      </div>
+    </a>
+  </section>
+
+  <section class="cta">
+    <p><b>Build your own decision bot.</b> Drex answers typed questions (yes/no, pick one, score) with a probability for every answer. New accounts get $25 of credit.</p>
+    <a class="btn accent" href="https://console.nace.ai/?utm_source=arcade&amp;utm_medium=site&amp;utm_campaign=drex10000&amp;utm_content=home">Get an API key</a>
+  </section>
+
+  <footer class="wordmark"><span class="big">Drex <em>Arcade</em></span><span class="tag">drexmaxxing >>></span></footer>
+  <p class="note">Made by Nace.AI. Every replay uses real answers from the hosted Drex API, recorded on 19 Oct 2026 one request at a time; the times shown are those round trips. <a href="https://nace.ai/developers">Docs and models</a> · <a href="https://huggingface.co/nace-ai">Hugging Face</a> · <a href="https://openrouter.ai/nace-ai">OpenRouter</a></p>
+</div>
+<script type="module">
+// Headline numbers come straight from the recordings.
+const get = (p) => fetch(p).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+const [beat, stack, race] = await Promise.all([get('beat/answers.json'), get('stack/replay.json'), get('d-rex/replay.json')]);
+if (beat) {
+  const { MESSAGES } = await import('./beat/messages.js');
+  const a = beat.answers['drex-max'];
+  set('b-right', `${a.filter((x, i) => x.choice === MESSAGES[i].label).length}/${a.length}`);
+  set('b-ms', `${(a.reduce((s, x) => s + x.ms, 0) / a.length / 1000).toFixed(2)} s`);
+}
+if (race) {
+  const dx = await import('./d-rex/engine.js');
+  const sch = dx.schedule(race.seed, 400), mx = dx.simulate(race.runs['drex-max'], sch), v2 = dx.simulate(race.runs['drex-v2.0'], sch);
+  set('d-max', mx.score.toLocaleString('en-US')); set('d-v2', v2.score.toLocaleString('en-US')); set('d-speed', `${mx.speed}×`);
+}
+if (stack) {
+  const sm = await import('./stack/engine.js');
+  const rows = {};
+  for (const [model, run] of Object.entries(stack.runs)) {
+    const seq = sm.pieceSequence(stack.seed, stack.maxPieces + 2), garbage = sm.garbageHoles(stack.seed, 100);
+    let b = sm.emptyBoard(), lines = 0;
+    run.forEach((d, i) => { const { list } = sm.requestFor(b, seq, i, lines, stack.version); const p = list.find((o) => o.key === d.choice) ?? list[0]; b = sm.normalize(p.after); lines += p.cleared; if ((i + 1) % sm.GARBAGE_EVERY === 0) b = sm.addGarbage(b, garbage[(i + 1) / sm.GARBAGE_EVERY]).board; });
+    rows[model] = lines;
+  }
+  set('s-max', rows['drex-max']); set('s-v2', rows['drex-v2.0']);
+}
+</script>
+</body>
+</html>

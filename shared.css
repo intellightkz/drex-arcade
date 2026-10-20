@@ -1,0 +1,68 @@
+/* Drex Arcade, styled after the Drex Max launch post: near-black page, green mono section labels,
+   a high-contrast serif for names and numbers, and cream "paper" panels that hold the data. One dark look on purpose. */
+:root {
+  color-scheme: dark;
+  --bg: #121311; --surface: #1a1b19; --ink: #eeece6; --muted: #8e9089; --line: #2c2e2a;
+  --accent: #8fd18a; --accent-soft: #1f2c1e; --amber: #e3b45a; --amber-soft: #2e2615; --bad: #e8795a; --bad-soft: #33201a;
+  --paper: #efe9dc; --paper-ink: #1c1c1a; --paper-muted: #77736a; --paper-line: #d8d0bf; --accent-ink: #2f7d2c; --bad-ink: #b4441c; --amber-ink: #b07a12;
+  --display: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;   /* labels, UI, data */
+  --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;          /* names and big numbers */
+  --body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 56px; }
+a { color: var(--accent); text-underline-offset: 3px; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; margin: 0; line-height: 1.02; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+.wrap { max-width: 1100px; margin: 0 auto; display: grid; gap: 26px; }
+
+/* Top bar */
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-family: var(--display); font-size: 13.5px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.topbar .brand { font-weight: 700; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; letter-spacing: .02em; }
+.topbar .brand i { width: 16px; height: 16px; background: var(--accent); display: inline-block; border-radius: 3px; transform: rotate(45deg) scale(.8); }
+.topbar nav { display: flex; gap: 18px; flex-wrap: wrap; }
+.topbar nav a { color: var(--muted); text-decoration: none; text-transform: uppercase; letter-spacing: .06em; font-size: 12.5px; }
+.topbar nav a[aria-current="page"], .topbar nav a:hover { color: var(--accent); }
+
+/* Section heads, as in the post: green mono label left, grey mono meta right, grey subtitle under */
+.sec-head { display: grid; gap: 4px; }
+.sec-head .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.label { font: 800 clamp(16px, 2.2vw, 20px)/1.1 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.meta { font: 500 13px var(--display); color: var(--muted); }
+.subtitle { font: 400 15px var(--display); color: var(--muted); }
+
+/* Cream paper panels hold game data */
+.paper { background: var(--paper); color: var(--paper-ink); border-radius: 4px; }
+.paper .caps { font: 500 10.5px var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--paper-muted); }
+.paper .num { font: 400 30px/1 var(--serif); font-variant-numeric: tabular-nums; }
+.paper .rule { border-top: 1px solid var(--paper-line); }
+
+/* Buttons */
+.btn { font: 700 13.5px var(--display); letter-spacing: .04em; text-transform: uppercase; padding: 11px 16px; border: 1px solid var(--accent); background: transparent; color: var(--accent); border-radius: 3px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+.btn:hover { background: var(--accent-soft); }
+.btn.primary, .btn.accent { background: var(--accent); color: var(--bg); }
+.btn.primary:hover, .btn.accent:hover { filter: brightness(1.08); }
+.btn:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--display); }
+.note { font: 12.5px/1.55 var(--display); color: var(--muted); max-width: 100ch; }
+
+/* Call to action band */
+.cta { border: 1px solid var(--line); border-radius: 4px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; background: var(--surface); }
+.cta p { max-width: 62ch; }
+.cta b { color: var(--accent); font-weight: 600; }
+
+/* Big wordmark footer, like the post's "Drex Max" */
+.wordmark { display: grid; gap: 6px; justify-items: center; padding-block: 28px 8px; border-top: 1px solid var(--line); }
+.wordmark .big { font: 400 clamp(56px, 12vw, 132px)/0.95 var(--serif); letter-spacing: -0.02em; }
+.wordmark .big em { font-style: normal; color: var(--accent); }
+.wordmark .tag { font: 700 clamp(16px, 2.4vw, 22px) var(--display); color: var(--accent); letter-spacing: .02em; }
+/* ?clip: a clean frame for screen-recording posts on X (no nav, CTA or footnotes) */
+.clip body { padding-block: 28px; }
+.clip .topbar, .clip .cta, .clip .note, .clip .no-clip { display: none !important; }
+.clip .wordmark { padding-block: 14px 0; }
+.clip .wordmark .big { font-size: clamp(40px, 6vw, 64px); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

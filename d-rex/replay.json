@@ -1,0 +1,1992 @@
+{
+ "recordedAt": "2026-10-19T18:56:16.616Z",
+ "api": "https://console.nace.ai/v1/systemone",
+ "note": "Real Drex API answers, one request at a time.",
+ "seed": 20261020,
+ "runs": {
+  "drex-max": [
+   {
+    "i": 0,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0.0001,
+     "duck": 0
+    },
+    "ms": 328,
+    "evalMs": 77
+   },
+   {
+    "i": 1,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "duck": 0.0001,
+     "nothing": 0
+    },
+    "ms": 332,
+    "evalMs": 83
+   },
+   {
+    "i": 2,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 333,
+    "evalMs": 84
+   },
+   {
+    "i": 3,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 337,
+    "evalMs": 84
+   },
+   {
+    "i": 4,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 330,
+    "evalMs": 82
+   },
+   {
+    "i": 5,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 323,
+    "evalMs": 78
+   },
+   {
+    "i": 6,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9997,
+     "nothing": 0.0002,
+     "duck": 0.0001
+    },
+    "ms": 335,
+    "evalMs": 81
+   },
+   {
+    "i": 7,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 321,
+    "evalMs": 75
+   },
+   {
+    "i": 8,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9997,
+     "nothing": 0.0002,
+     "duck": 0.0001
+    },
+    "ms": 361,
+    "evalMs": 83
+   },
+   {
+    "i": 9,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 354,
+    "evalMs": 93
+   },
+   {
+    "i": 10,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9997,
+     "nothing": 0.0002,
+     "duck": 0.0001
+    },
+    "ms": 334,
+    "evalMs": 78
+   },
+   {
+    "i": 11,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 322,
+    "evalMs": 74
+   },
+   {
+    "i": 12,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 322,
+    "evalMs": 83
+   },
+   {
+    "i": 13,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "duck": 0,
+     "nothing": 0
+    },
+    "ms": 341,
+    "evalMs": 83
+   },
+   {
+    "i": 14,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 343,
+    "evalMs": 81
+   },
+   {
+    "i": 15,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 333,
+    "evalMs": 73
+   },
+   {
+    "i": 16,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 319,
+    "evalMs": 73
+   },
+   {
+    "i": 17,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "duck": 0.0001,
+     "nothing": 0
+    },
+    "ms": 321,
+    "evalMs": 81
+   },
+   {
+    "i": 18,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9999,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 334,
+    "evalMs": 82
+   },
+   {
+    "i": 19,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0.0001,
+     "duck": 0
+    },
+    "ms": 328,
+    "evalMs": 80
+   },
+   {
+    "i": 20,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 324,
+    "evalMs": 75
+   },
+   {
+    "i": 21,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 327,
+    "evalMs": 74
+   },
+   {
+    "i": 22,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 320,
+    "evalMs": 76
+   },
+   {
+    "i": 23,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 340,
+    "evalMs": 84
+   },
+   {
+    "i": 24,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 471,
+    "evalMs": 81
+   },
+   {
+    "i": 25,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "duck": 0,
+     "nothing": 0
+    },
+    "ms": 335,
+    "evalMs": 81
+   },
+   {
+    "i": 26,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 324,
+    "evalMs": 76
+   },
+   {
+    "i": 27,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 319,
+    "evalMs": 78
+   },
+   {
+    "i": 28,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9999,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 338,
+    "evalMs": 82
+   },
+   {
+    "i": 29,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 327,
+    "evalMs": 80
+   },
+   {
+    "i": 30,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 406,
+    "evalMs": 99
+   },
+   {
+    "i": 31,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 328,
+    "evalMs": 81
+   },
+   {
+    "i": 32,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 324,
+    "evalMs": 75
+   },
+   {
+    "i": 33,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 345,
+    "evalMs": 79
+   },
+   {
+    "i": 34,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "duck": 0,
+     "nothing": 0
+    },
+    "ms": 329,
+    "evalMs": 81
+   },
+   {
+    "i": 35,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 389,
+    "evalMs": 80
+   },
+   {
+    "i": 36,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "duck": 0,
+     "nothing": 0
+    },
+    "ms": 326,
+    "evalMs": 80
+   },
+   {
+    "i": 37,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "duck": 0.0001,
+     "nothing": 0
+    },
+    "ms": 331,
+    "evalMs": 80
+   },
+   {
+    "i": 38,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 319,
+    "evalMs": 77
+   },
+   {
+    "i": 39,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "duck": 0,
+     "nothing": 0
+    },
+    "ms": 362,
+    "evalMs": 83
+   },
+   {
+    "i": 40,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 372,
+    "evalMs": 79
+   },
+   {
+    "i": 41,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 330,
+    "evalMs": 78
+   },
+   {
+    "i": 42,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9999,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 329,
+    "evalMs": 82
+   },
+   {
+    "i": 43,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 328,
+    "evalMs": 75
+   },
+   {
+    "i": 44,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0.0001,
+     "duck": 0
+    },
+    "ms": 325,
+    "evalMs": 80
+   },
+   {
+    "i": 45,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "duck": 0,
+     "nothing": 0
+    },
+    "ms": 336,
+    "evalMs": 82
+   },
+   {
+    "i": 46,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 324,
+    "evalMs": 82
+   },
+   {
+    "i": 47,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9995,
+     "nothing": 0.0003,
+     "duck": 0.0002
+    },
+    "ms": 326,
+    "evalMs": 73
+   },
+   {
+    "i": 48,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 551,
+    "evalMs": 93
+   },
+   {
+    "i": 49,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 338,
+    "evalMs": 79
+   },
+   {
+    "i": 50,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9999,
+     "nothing": 0.0001,
+     "jump": 0
+    },
+    "ms": 342,
+    "evalMs": 88
+   },
+   {
+    "i": 51,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9999,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 330,
+    "evalMs": 83
+   },
+   {
+    "i": 52,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 328,
+    "evalMs": 82
+   },
+   {
+    "i": 53,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "duck": 0,
+     "nothing": 0
+    },
+    "ms": 335,
+    "evalMs": 80
+   },
+   {
+    "i": 54,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "duck": 0.0001,
+     "nothing": 0
+    },
+    "ms": 345,
+    "evalMs": 78
+   },
+   {
+    "i": 55,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 379,
+    "evalMs": 96
+   },
+   {
+    "i": 56,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 335,
+    "evalMs": 85
+   },
+   {
+    "i": 57,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "duck": 0,
+     "nothing": 0
+    },
+    "ms": 324,
+    "evalMs": 79
+   },
+   {
+    "i": 58,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 333,
+    "evalMs": 78
+   },
+   {
+    "i": 59,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9999,
+     "nothing": 0.0001,
+     "jump": 0
+    },
+    "ms": 329,
+    "evalMs": 79
+   },
+   {
+    "i": 60,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9992,
+     "duck": 0.0004,
+     "nothing": 0.0004
+    },
+    "ms": 341,
+    "evalMs": 83
+   },
+   {
+    "i": 61,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 402,
+    "evalMs": 85
+   },
+   {
+    "i": 62,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 326,
+    "evalMs": 79
+   },
+   {
+    "i": 63,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0.0001,
+     "duck": 0
+    },
+    "ms": 335,
+    "evalMs": 80
+   },
+   {
+    "i": 64,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 332,
+    "evalMs": 77
+   },
+   {
+    "i": 65,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 349,
+    "evalMs": 78
+   },
+   {
+    "i": 66,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 333,
+    "evalMs": 82
+   },
+   {
+    "i": 67,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 325,
+    "evalMs": 77
+   },
+   {
+    "i": 68,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "duck": 0.0001,
+     "nothing": 0
+    },
+    "ms": 336,
+    "evalMs": 80
+   },
+   {
+    "i": 69,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9999,
+     "nothing": 0.0001,
+     "jump": 0
+    },
+    "ms": 330,
+    "evalMs": 81
+   },
+   {
+    "i": 70,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9999,
+     "nothing": 0.0001,
+     "jump": 0
+    },
+    "ms": 335,
+    "evalMs": 82
+   },
+   {
+    "i": 71,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 380,
+    "evalMs": 80
+   },
+   {
+    "i": 72,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 347,
+    "evalMs": 80
+   },
+   {
+    "i": 73,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 335,
+    "evalMs": 83
+   },
+   {
+    "i": 74,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 337,
+    "evalMs": 81
+   },
+   {
+    "i": 75,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "duck": 0.0001,
+     "nothing": 0
+    },
+    "ms": 349,
+    "evalMs": 83
+   },
+   {
+    "i": 76,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 370,
+    "evalMs": 84
+   },
+   {
+    "i": 77,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 321,
+    "evalMs": 77
+   },
+   {
+    "i": 78,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 337,
+    "evalMs": 82
+   },
+   {
+    "i": 79,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "duck": 0.0001,
+     "nothing": 0
+    },
+    "ms": 325,
+    "evalMs": 82
+   },
+   {
+    "i": 80,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0.0001,
+     "duck": 0
+    },
+    "ms": 337,
+    "evalMs": 82
+   },
+   {
+    "i": 81,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 328,
+    "evalMs": 76
+   },
+   {
+    "i": 82,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 329,
+    "evalMs": 80
+   },
+   {
+    "i": 83,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 330,
+    "evalMs": 81
+   },
+   {
+    "i": 84,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9999,
+     "duck": 0.0001,
+     "nothing": 0
+    },
+    "ms": 341,
+    "evalMs": 80
+   },
+   {
+    "i": 85,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 1,
+     "duck": 0,
+     "jump": 0
+    },
+    "ms": 323,
+    "evalMs": 74
+   },
+   {
+    "i": 86,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9999,
+     "nothing": 0.0001,
+     "jump": 0
+    },
+    "ms": 358,
+    "evalMs": 81
+   },
+   {
+    "i": 87,
+    "choice": "duck",
+    "probs": {
+     "duck": 1,
+     "nothing": 0,
+     "jump": 0
+    },
+    "ms": 339,
+    "evalMs": 82
+   },
+   {
+    "i": 88,
+    "choice": "jump",
+    "probs": {
+     "jump": 1,
+     "nothing": 0,
+     "duck": 0
+    },
+    "ms": 327,
+    "evalMs": 76
+   },
+   {
+    "i": 89,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9999,
+     "nothing": 0.0001,
+     "jump": 0
+    },
+    "ms": 346,
+    "evalMs": 82
+   }
+  ],
+  "drex-v2.0": [
+   {
+    "i": 0,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9942,
+     "nothing": 0.0038,
+     "duck": 0.0019
+    },
+    "ms": 369,
+    "evalMs": 24
+   },
+   {
+    "i": 1,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.8045,
+     "nothing": 0.1128,
+     "duck": 0.0827
+    },
+    "ms": 358,
+    "evalMs": 21
+   },
+   {
+    "i": 2,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9961,
+     "nothing": 0.0023,
+     "duck": 0.0016
+    },
+    "ms": 428,
+    "evalMs": 21
+   },
+   {
+    "i": 3,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.889,
+     "jump": 0.0905,
+     "duck": 0.0205
+    },
+    "ms": 477,
+    "evalMs": 24
+   },
+   {
+    "i": 4,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9972,
+     "nothing": 0.0023,
+     "jump": 0.0005
+    },
+    "ms": 353,
+    "evalMs": 19
+   },
+   {
+    "i": 5,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9894,
+     "nothing": 0.0059,
+     "duck": 0.0046
+    },
+    "ms": 351,
+    "evalMs": 17
+   },
+   {
+    "i": 6,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9981,
+     "nothing": 0.0011,
+     "duck": 0.0007
+    },
+    "ms": 357,
+    "evalMs": 17
+   },
+   {
+    "i": 7,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9973,
+     "nothing": 0.0024,
+     "jump": 0.0003
+    },
+    "ms": 353,
+    "evalMs": 18
+   },
+   {
+    "i": 8,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9966,
+     "nothing": 0.002,
+     "duck": 0.0014
+    },
+    "ms": 353,
+    "evalMs": 21
+   },
+   {
+    "i": 9,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.8296,
+     "jump": 0.1417,
+     "duck": 0.0288
+    },
+    "ms": 359,
+    "evalMs": 20
+   },
+   {
+    "i": 10,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9981,
+     "nothing": 0.0013,
+     "duck": 0.0007
+    },
+    "ms": 399,
+    "evalMs": 20
+   },
+   {
+    "i": 11,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.98,
+     "jump": 0.0165,
+     "duck": 0.0035
+    },
+    "ms": 363,
+    "evalMs": 19
+   },
+   {
+    "i": 12,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9906,
+     "nothing": 0.0054,
+     "duck": 0.004
+    },
+    "ms": 350,
+    "evalMs": 17
+   },
+   {
+    "i": 13,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9936,
+     "nothing": 0.0055,
+     "duck": 0.0009
+    },
+    "ms": 359,
+    "evalMs": 20
+   },
+   {
+    "i": 14,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9981,
+     "nothing": 0.001,
+     "duck": 0.0008
+    },
+    "ms": 358,
+    "evalMs": 20
+   },
+   {
+    "i": 15,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9799,
+     "nothing": 0.0142,
+     "jump": 0.006
+    },
+    "ms": 367,
+    "evalMs": 18
+   },
+   {
+    "i": 16,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9989,
+     "nothing": 0.0006,
+     "duck": 0.0005
+    },
+    "ms": 358,
+    "evalMs": 19
+   },
+   {
+    "i": 17,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.8312,
+     "nothing": 0.1015,
+     "duck": 0.0672
+    },
+    "ms": 368,
+    "evalMs": 19
+   },
+   {
+    "i": 18,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9797,
+     "nothing": 0.015,
+     "jump": 0.0053
+    },
+    "ms": 350,
+    "evalMs": 18
+   },
+   {
+    "i": 19,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9963,
+     "nothing": 0.0022,
+     "duck": 0.0016
+    },
+    "ms": 365,
+    "evalMs": 17
+   },
+   {
+    "i": 20,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9756,
+     "nothing": 0.0169,
+     "jump": 0.0075
+    },
+    "ms": 351,
+    "evalMs": 21
+   },
+   {
+    "i": 21,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9971,
+     "nothing": 0.0023,
+     "jump": 0.0006
+    },
+    "ms": 379,
+    "evalMs": 17
+   },
+   {
+    "i": 22,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.9116,
+     "jump": 0.0734,
+     "duck": 0.015
+    },
+    "ms": 369,
+    "evalMs": 18
+   },
+   {
+    "i": 23,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9971,
+     "nothing": 0.0023,
+     "jump": 0.0006
+    },
+    "ms": 357,
+    "evalMs": 18
+   },
+   {
+    "i": 24,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9988,
+     "nothing": 0.0007,
+     "duck": 0.0006
+    },
+    "ms": 388,
+    "evalMs": 18
+   },
+   {
+    "i": 25,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.998,
+     "nothing": 0.0012,
+     "duck": 0.0008
+    },
+    "ms": 469,
+    "evalMs": 19
+   },
+   {
+    "i": 26,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9986,
+     "nothing": 0.0009,
+     "duck": 0.0005
+    },
+    "ms": 370,
+    "evalMs": 20
+   },
+   {
+    "i": 27,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.8477,
+     "jump": 0.1267,
+     "duck": 0.0255
+    },
+    "ms": 356,
+    "evalMs": 19
+   },
+   {
+    "i": 28,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9807,
+     "nothing": 0.0131,
+     "jump": 0.0063
+    },
+    "ms": 351,
+    "evalMs": 18
+   },
+   {
+    "i": 29,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9951,
+     "nothing": 0.0025,
+     "duck": 0.0024
+    },
+    "ms": 378,
+    "evalMs": 19
+   },
+   {
+    "i": 30,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9972,
+     "nothing": 0.0016,
+     "duck": 0.0012
+    },
+    "ms": 386,
+    "evalMs": 18
+   },
+   {
+    "i": 31,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.998,
+     "nothing": 0.0011,
+     "duck": 0.0009
+    },
+    "ms": 352,
+    "evalMs": 18
+   },
+   {
+    "i": 32,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9963,
+     "nothing": 0.0031,
+     "jump": 0.0006
+    },
+    "ms": 348,
+    "evalMs": 18
+   },
+   {
+    "i": 33,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9984,
+     "nothing": 0.0009,
+     "duck": 0.0007
+    },
+    "ms": 356,
+    "evalMs": 19
+   },
+   {
+    "i": 34,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9946,
+     "nothing": 0.0045,
+     "duck": 0.0009
+    },
+    "ms": 395,
+    "evalMs": 21
+   },
+   {
+    "i": 35,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.9787,
+     "jump": 0.0179,
+     "duck": 0.0034
+    },
+    "ms": 363,
+    "evalMs": 22
+   },
+   {
+    "i": 36,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.8394,
+     "nothing": 0.0966,
+     "duck": 0.064
+    },
+    "ms": 363,
+    "evalMs": 17
+   },
+   {
+    "i": 37,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.8926,
+     "nothing": 0.0707,
+     "duck": 0.0367
+    },
+    "ms": 349,
+    "evalMs": 18
+   },
+   {
+    "i": 38,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9993,
+     "duck": 0.0004,
+     "nothing": 0.0004
+    },
+    "ms": 369,
+    "evalMs": 19
+   },
+   {
+    "i": 39,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9983,
+     "nothing": 0.0012,
+     "duck": 0.0005
+    },
+    "ms": 439,
+    "evalMs": 18
+   },
+   {
+    "i": 40,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9965,
+     "nothing": 0.0019,
+     "duck": 0.0016
+    },
+    "ms": 388,
+    "evalMs": 20
+   },
+   {
+    "i": 41,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.979,
+     "jump": 0.0178,
+     "duck": 0.0032
+    },
+    "ms": 354,
+    "evalMs": 23
+   },
+   {
+    "i": 42,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9762,
+     "nothing": 0.0174,
+     "jump": 0.0064
+    },
+    "ms": 354,
+    "evalMs": 20
+   },
+   {
+    "i": 43,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.999,
+     "nothing": 0.0006,
+     "duck": 0.0004
+    },
+    "ms": 365,
+    "evalMs": 20
+   },
+   {
+    "i": 44,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9985,
+     "nothing": 0.001,
+     "duck": 0.0005
+    },
+    "ms": 351,
+    "evalMs": 17
+   },
+   {
+    "i": 45,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.8595,
+     "nothing": 0.0836,
+     "duck": 0.0569
+    },
+    "ms": 353,
+    "evalMs": 19
+   },
+   {
+    "i": 46,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.8152,
+     "jump": 0.1545,
+     "duck": 0.0303
+    },
+    "ms": 401,
+    "evalMs": 20
+   },
+   {
+    "i": 47,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9932,
+     "nothing": 0.004,
+     "duck": 0.0029
+    },
+    "ms": 368,
+    "evalMs": 19
+   },
+   {
+    "i": 48,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.858,
+     "jump": 0.1167,
+     "duck": 0.0253
+    },
+    "ms": 357,
+    "evalMs": 19
+   },
+   {
+    "i": 49,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.977,
+     "jump": 0.0197,
+     "duck": 0.0033
+    },
+    "ms": 356,
+    "evalMs": 22
+   },
+   {
+    "i": 50,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9805,
+     "nothing": 0.0144,
+     "jump": 0.0051
+    },
+    "ms": 352,
+    "evalMs": 20
+   },
+   {
+    "i": 51,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9808,
+     "nothing": 0.014,
+     "jump": 0.0052
+    },
+    "ms": 353,
+    "evalMs": 17
+   },
+   {
+    "i": 52,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9976,
+     "nothing": 0.0013,
+     "duck": 0.0012
+    },
+    "ms": 349,
+    "evalMs": 17
+   },
+   {
+    "i": 53,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9983,
+     "nothing": 0.0015,
+     "duck": 0.0002
+    },
+    "ms": 428,
+    "evalMs": 17
+   },
+   {
+    "i": 54,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.8858,
+     "nothing": 0.0765,
+     "duck": 0.0376
+    },
+    "ms": 386,
+    "evalMs": 20
+   },
+   {
+    "i": 55,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9986,
+     "nothing": 0.001,
+     "duck": 0.0005
+    },
+    "ms": 356,
+    "evalMs": 19
+   },
+   {
+    "i": 56,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9983,
+     "nothing": 0.0009,
+     "duck": 0.0008
+    },
+    "ms": 353,
+    "evalMs": 21
+   },
+   {
+    "i": 57,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9976,
+     "nothing": 0.002,
+     "duck": 0.0004
+    },
+    "ms": 422,
+    "evalMs": 21
+   },
+   {
+    "i": 58,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.9573,
+     "jump": 0.0364,
+     "duck": 0.0063
+    },
+    "ms": 381,
+    "evalMs": 21
+   },
+   {
+    "i": 59,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9579,
+     "nothing": 0.0295,
+     "jump": 0.0126
+    },
+    "ms": 366,
+    "evalMs": 21
+   },
+   {
+    "i": 60,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.998,
+     "nothing": 0.0012,
+     "duck": 0.0007
+    },
+    "ms": 359,
+    "evalMs": 20
+   },
+   {
+    "i": 61,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9956,
+     "nothing": 0.0026,
+     "duck": 0.0018
+    },
+    "ms": 350,
+    "evalMs": 19
+   },
+   {
+    "i": 62,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9987,
+     "nothing": 0.0007,
+     "duck": 0.0006
+    },
+    "ms": 354,
+    "evalMs": 20
+   },
+   {
+    "i": 63,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9994,
+     "nothing": 0.0004,
+     "duck": 0.0002
+    },
+    "ms": 368,
+    "evalMs": 20
+   },
+   {
+    "i": 64,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9987,
+     "nothing": 0.0007,
+     "duck": 0.0006
+    },
+    "ms": 352,
+    "evalMs": 19
+   },
+   {
+    "i": 65,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9987,
+     "nothing": 0.0007,
+     "duck": 0.0006
+    },
+    "ms": 347,
+    "evalMs": 20
+   },
+   {
+    "i": 66,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9987,
+     "nothing": 0.0007,
+     "duck": 0.0006
+    },
+    "ms": 361,
+    "evalMs": 17
+   },
+   {
+    "i": 67,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9974,
+     "nothing": 0.0022,
+     "jump": 0.0004
+    },
+    "ms": 351,
+    "evalMs": 17
+   },
+   {
+    "i": 68,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9966,
+     "nothing": 0.0027,
+     "duck": 0.0007
+    },
+    "ms": 391,
+    "evalMs": 17
+   },
+   {
+    "i": 69,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9738,
+     "nothing": 0.0186,
+     "jump": 0.0076
+    },
+    "ms": 355,
+    "evalMs": 18
+   },
+   {
+    "i": 70,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9738,
+     "nothing": 0.0186,
+     "jump": 0.0076
+    },
+    "ms": 361,
+    "evalMs": 18
+   },
+   {
+    "i": 71,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9956,
+     "nothing": 0.0026,
+     "duck": 0.0018
+    },
+    "ms": 400,
+    "evalMs": 20
+   },
+   {
+    "i": 72,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.9071,
+     "jump": 0.0748,
+     "duck": 0.0181
+    },
+    "ms": 349,
+    "evalMs": 20
+   },
+   {
+    "i": 73,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9974,
+     "nothing": 0.0022,
+     "jump": 0.0004
+    },
+    "ms": 361,
+    "evalMs": 20
+   },
+   {
+    "i": 74,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.8832,
+     "jump": 0.0913,
+     "duck": 0.0255
+    },
+    "ms": 351,
+    "evalMs": 19
+   },
+   {
+    "i": 75,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.858,
+     "nothing": 0.091,
+     "duck": 0.051
+    },
+    "ms": 348,
+    "evalMs": 19
+   },
+   {
+    "i": 76,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9974,
+     "nothing": 0.0022,
+     "jump": 0.0004
+    },
+    "ms": 350,
+    "evalMs": 19
+   },
+   {
+    "i": 77,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.9868,
+     "jump": 0.0117,
+     "duck": 0.0015
+    },
+    "ms": 356,
+    "evalMs": 21
+   },
+   {
+    "i": 78,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.9868,
+     "jump": 0.0117,
+     "duck": 0.0015
+    },
+    "ms": 603,
+    "evalMs": 23
+   },
+   {
+    "i": 79,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.858,
+     "nothing": 0.091,
+     "duck": 0.051
+    },
+    "ms": 358,
+    "evalMs": 22
+   },
+   {
+    "i": 80,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9985,
+     "nothing": 0.0008,
+     "duck": 0.0007
+    },
+    "ms": 350,
+    "evalMs": 20
+   },
+   {
+    "i": 81,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9956,
+     "nothing": 0.0026,
+     "duck": 0.0018
+    },
+    "ms": 347,
+    "evalMs": 17
+   },
+   {
+    "i": 82,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.9071,
+     "jump": 0.0748,
+     "duck": 0.0181
+    },
+    "ms": 391,
+    "evalMs": 23
+   },
+   {
+    "i": 83,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.9868,
+     "jump": 0.0117,
+     "duck": 0.0015
+    },
+    "ms": 363,
+    "evalMs": 21
+   },
+   {
+    "i": 84,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.8347,
+     "nothing": 0.0979,
+     "duck": 0.0674
+    },
+    "ms": 350,
+    "evalMs": 19
+   },
+   {
+    "i": 85,
+    "choice": "nothing",
+    "probs": {
+     "nothing": 0.9868,
+     "jump": 0.0117,
+     "duck": 0.0015
+    },
+    "ms": 370,
+    "evalMs": 23
+   },
+   {
+    "i": 86,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9705,
+     "nothing": 0.0228,
+     "jump": 0.0067
+    },
+    "ms": 372,
+    "evalMs": 20
+   },
+   {
+    "i": 87,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9974,
+     "nothing": 0.0022,
+     "jump": 0.0004
+    },
+    "ms": 444,
+    "evalMs": 19
+   },
+   {
+    "i": 88,
+    "choice": "jump",
+    "probs": {
+     "jump": 0.9982,
+     "nothing": 0.001,
+     "duck": 0.0008
+    },
+    "ms": 349,
+    "evalMs": 20
+   },
+   {
+    "i": 89,
+    "choice": "duck",
+    "probs": {
+     "duck": 0.9808,
+     "nothing": 0.0141,
+     "jump": 0.005
+    },
+    "ms": 364,
+    "evalMs": 22
+   }
+  ]
+ }
+}

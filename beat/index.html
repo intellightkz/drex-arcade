@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Beat Drex</title>
+<meta name="description" content="Sort 15 messages faster and better than Drex, a decision model by Nace.AI.">
+<meta property="og:title" content="Beat Drex: sort 15 messages faster than a decision model">
+<meta property="og:description" content="Spam, urgent or can wait. 4 seconds per message. Drex Max sorted all 36 right.">
+<meta property="og:image" content="https://drex-arcade.vercel.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500;700;800&family=Onest:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../shared.css">
+<script>if (/[?&]clip\b/.test(location.search)) document.documentElement.classList.add('clip');</script>
+<style>
+  .stage { max-width: 760px; width: 100%; margin: 0 auto; display: grid; gap: 16px; }
+  .hud { display: flex; justify-content: space-between; font: 500 13px var(--display); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .hud b { color: var(--accent); font-weight: 800; }
+  .timer { height: 2px; background: var(--line); overflow: hidden; }
+  .timer i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; }
+  .mail { padding: 20px 22px 22px; display: grid; gap: 10px; min-height: 160px; align-content: start; }
+  .mail .from { font: 500 11px var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--paper-muted); overflow-wrap: anywhere; }
+  .mail .text { font: 400 clamp(22px, 3.4vw, 30px)/1.2 var(--serif); }
+  .choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .choices button { font: 700 13.5px var(--display); letter-spacing: .06em; text-transform: uppercase; padding: 16px 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 3px; cursor: pointer; display: grid; gap: 4px; justify-items: center; }
+  .choices button kbd { font: 500 11px var(--display); color: var(--muted); }
+  .choices button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .choices button.right { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  .choices button.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+  .choices button:disabled { cursor: default; }
+  .reveal { display: grid; gap: 10px; padding: 14px 18px 16px; min-height: 140px; align-content: start; }
+  .reveal .wait { font: italic 400 22px var(--serif); color: var(--paper-muted); }
+  .verdicts { display: flex; gap: 18px; flex-wrap: wrap; font: 500 12.5px var(--display); color: var(--paper-muted); text-transform: uppercase; letter-spacing: .05em; }
+  .ok { color: var(--accent-ink); font-weight: 800; } .no { color: var(--bad-ink); font-weight: 800; }
+  .odds { display: grid; gap: 4px; }
+  .odds .row { display: grid; grid-template-columns: 1fr auto; gap: 10px; font: 400 21px/1.2 var(--serif); }
+  .odds .row span:nth-child(2) { font: 500 13px var(--display); align-self: end; }
+  .odds .bar { grid-column: 1 / -1; height: 1px; background: var(--paper-line); }
+  .odds .bar i { display: block; height: 100%; background: var(--paper-muted); transition: width .3s; }
+  .odds .row.pick { color: var(--accent-ink); } .odds .row.pick .bar { height: 2px; } .odds .row.pick .bar i { background: var(--accent-ink); }
+  .intro, .result { display: grid; gap: 16px; }
+  .intro h1, .result h1 { font-size: clamp(48px, 8vw, 84px); }
+  .intro p { max-width: 60ch; }
+  .intro b { color: var(--accent); font-weight: 600; }
+  .score { display: grid; grid-template-columns: 1fr 1fr; }
+  .score div { padding: 16px 18px; display: grid; gap: 4px; }
+  .score div + div { border-left: 1px solid var(--paper-line); }
+  .score .num { font-size: clamp(44px, 7vw, 64px); }
+  .score .win .num { color: var(--accent-ink); }
+  .share { font: 13px/1.5 var(--display); color: var(--muted); border: 1px dashed var(--line); border-radius: 3px; padding: 10px 12px; overflow-wrap: anywhere; }
+  .row-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  @media (max-width: 520px) { .choices { grid-template-columns: 1fr; } .odds .row { font-size: 19px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar"><a class="brand" href="../"><i></i>nace.ai · Drex Arcade</a><nav><a href="./" aria-current="page">Beat Drex</a><a href="../d-rex/">D-Rex</a><a href="../stack/">Drex Stack</a></nav></div>
+  <div class="stage" id="stage"></div>
+  <section class="cta">
+    <p><b>Sorting, routing, triage:</b> this is what Drex does all day for AI agents. One typed question in, a probability per answer out. New accounts get $25 of credit.</p>
+    <a class="btn accent" href="https://console.nace.ai/?utm_source=arcade&amp;utm_medium=game&amp;utm_campaign=drex10000&amp;utm_content=beat">Get an API key</a>
+  </section>
+  <footer class="wordmark"><span class="big">Drex <em>Max</em></span><span class="tag">drexmaxxing >>></span></footer>
+  <p class="note" id="note">Drex's answers are real Drex Max API responses recorded on 19 Oct 2026, one request at a time; its time is the measured round trip. Add <a href="?clip">?clip</a> to the address for a clean frame to screen-record.</p>
+</div>
+<script type="module">
+import { MESSAGES, CATEGORIES } from './messages.js';
+const ROUND = 15, SECONDS = 4;
+const KEYS = Object.keys(CATEGORIES);
+const stage = document.getElementById('stage');
+const data = await fetch('answers.json').then((r) => r.json());
+const drex = Object.fromEntries(data.answers['drex-max'].map((a) => [a.id, a]));
+
+function pickRound() {
+  const by = KEYS.map((k) => MESSAGES.filter((m) => m.label === k).sort(() => Math.random() - 0.5).slice(0, ROUND / KEYS.length));
+  return by.flat().sort(() => Math.random() - 0.5);
+}
+
+function intro() {
+  stage.innerHTML = `<div class="intro"><div class="sec-head"><div class="row"><span class="label">You vs Drex</span><span class="meta">${ROUND} messages · ${SECONDS} s each</span></div><span class="subtitle">sort an inbox faster and better than the model</span></div>
+    <h1>Beat Drex</h1>
+    <p>Sort every message into <b>Spam / scam</b>, <b>Urgent</b> or <b>Can wait</b>. Drex Max sorts the same messages. Then you compare.</p>
+    <p class="subtitle">Keys 1, 2, 3 or tap.</p>
+    <div class="row-btns"><button class="btn primary" id="go" type="button">Start</button></div></div>`;
+  document.getElementById('go').onclick = () => play(pickRound());
+}
+
+let keyHandler = null;
+async function play(round) {
+  const results = [];
+  for (let i = 0; i < round.length; i++) results.push(await ask(round[i], i, round.length, results));
+  finish(results);
+}
+
+function ask(m, i, n, results) {
+  return new Promise((resolve) => {
+    const youRight = results.filter((r) => r.you === r.label).length, drexRight = results.filter((r) => r.drex === r.label).length;
+    stage.innerHTML = `<div class="hud"><span>Message <b>${i + 1}</b> / ${n}</span><span>You <b>${youRight}</b> · Drex <b>${drexRight}</b></span></div>
+      <div class="timer"><i id="bar"></i></div>
+      <div class="paper mail"><div class="from">${esc(m.from)}</div><div class="text">${esc(m.text)}</div></div>
+      <div class="choices">${KEYS.map((k) => `<button type="button" data-k="${k}">${CATEGORIES[k].label}<kbd>${CATEGORIES[k].key}</kbd></button>`).join('')}</div>
+      <div class="paper reveal" id="reveal"><span class="caps">Drex's eye</span><span class="wait">Your call. Drex already decided.</span></div>`;
+    const started = performance.now();
+    const bar = document.getElementById('bar');
+    bar.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: SECONDS * 1000, easing: 'linear', fill: 'forwards' });
+    let done = false;
+    const answer = (k) => {
+      if (done) return; done = true; clearTimeout(timer); document.removeEventListener('keydown', keyHandler);
+      const secs = (performance.now() - started) / 1000, d = drex[m.id];
+      stage.querySelectorAll('.choices button').forEach((b) => { b.disabled = true; if (b.dataset.k === m.label) b.classList.add('right'); else if (b.dataset.k === k) b.classList.add('wrong'); });
+      const probs = d.probs;
+      document.getElementById('reveal').innerHTML = `<span class="caps">Drex's eye</span><div class="verdicts">
+          <span>You: ${k ? `<span class="${k === m.label ? 'ok' : 'no'}">${CATEGORIES[k].label}</span> in ${secs.toFixed(1)} s` : '<span class="no">too slow</span>'}</span>
+          <span>Drex Max: <span class="${d.choice === m.label ? 'ok' : 'no'}">${CATEGORIES[d.choice].label}</span> in ${(d.ms / 1000).toFixed(2)} s</span></div>
+        <div class="odds">${KEYS.map((c) => `<div class="row ${c === d.choice ? 'pick' : ''}"><span>${CATEGORIES[c].label.toLowerCase()}</span><span>${Math.round((probs[c] ?? 0) * 100)}%</span><span class="bar"><i style="width:${(probs[c] ?? 0) * 100}%"></i></span></div>`).join('')}</div>`;
+      setTimeout(() => resolve({ id: m.id, label: m.label, you: k, youSecs: k ? secs : SECONDS, drex: d.choice, drexSecs: d.ms / 1000 }), 1500);
+    };
+    stage.querySelectorAll('.choices button').forEach((b) => (b.onclick = () => answer(b.dataset.k)));
+    keyHandler = (e) => { const k = KEYS.find((c) => CATEGORIES[c].key === e.key); if (k) answer(k); };
+    document.addEventListener('keydown', keyHandler);
+    const timer = setTimeout(() => answer(null), SECONDS * 1000);
+  });
+}
+
+function finish(results) {
+  const you = results.filter((r) => r.you === r.label).length, dx = results.filter((r) => r.drex === r.label).length;
+  const youT = results.reduce((s, r) => s + r.youSecs, 0) / results.length, dxT = results.reduce((s, r) => s + r.drexSecs, 0) / results.length;
+  const headline = you > dx ? 'You beat Drex.' : you === dx ? 'Tie on accuracy.' : 'Drex wins this one.';
+  const url = location.origin + location.pathname;
+  const share = `I sorted ${you}/${results.length} messages vs Drex Max's ${dx}/${results.length} (it took ${dxT.toFixed(2)} s each, I took ${youT.toFixed(1)} s). Can you beat it? ${url}`;
+  const xUrl = `https://x.com/intent/post?text=${encodeURIComponent(share)}`;
+  stage.innerHTML = `<div class="result"><div class="sec-head"><div class="row"><span class="label">Result</span><span class="meta">${results.length} messages</span></div></div><h1>${headline}</h1>
+    <div class="paper score"><div class="${you > dx ? 'win' : ''}"><span class="caps">You</span><span class="num">${you}/${results.length}</span><span class="caps">${youT.toFixed(1)} s per message</span></div>
+    <div class="${dx > you ? 'win' : ''}"><span class="caps">Drex Max</span><span class="num">${dx}/${results.length}</span><span class="caps">${dxT.toFixed(2)} s per message</span></div></div>
+    ${dx < results.length ? `<p class="subtitle">Drex missed: ${results.filter((r) => r.drex !== r.label).map((r) => `“${esc(MESSAGES.find((m) => m.id === r.id).text.slice(0, 60))}…”`).join(', ')}</p>` : ''}
+    <div class="share" id="share">${esc(share)}</div>
+    <div class="row-btns"><a class="btn primary" href="${xUrl}" target="_blank" rel="noopener">Post on X</a><button class="btn" id="copy" type="button">Copy result</button><button class="btn" id="again" type="button">Play again</button></div></div>`;
+  document.getElementById('again').onclick = () => play(pickRound());
+  document.getElementById('copy').onclick = (e) => {
+    const b = e.currentTarget;
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(document.getElementById('share')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected, press ⌘C'; };
+    try { navigator.clipboard.writeText(share).then(() => (b.textContent = 'Copied'), fallback); } catch { fallback(); }
+  };
+}
+function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]); }
+intro();
+</script>
+</body>
+</html>
