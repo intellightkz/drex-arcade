@@ -6,7 +6,7 @@
 <title>Drex Arcade</title>
 <meta name="description" content="Watch Drex, the decision model by Nace.AI, play games. Then try to beat it at sorting an inbox.">
 <meta property="og:title" content="Drex Arcade">
-<meta property="og:description" content="Watch a decision model play. Then try to beat it.">
+<meta property="og:description" content="Five games against Drex Max, a decision model by Nace.AI. Its moves are real API answers; can you beat it?">
 <meta property="og:image" content="https://drex-arcade-pi.vercel.app/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.png" type="image/png">
@@ -16,11 +16,13 @@
 <script>if (/[?&]clip\b/.test(location.search)) document.documentElement.classList.add('clip');</script>
 <style>
   .hero { display: grid; gap: 14px; padding-block: 10px 4px; }
-  .hero h1 { font-size: clamp(44px, 8vw, 92px); max-width: 15ch; }
+  .hero h1 { font-size: clamp(40px, 6vw, 76px); max-width: 17ch; }
+  .hero .row-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
   .hero h1 em { font-style: normal; color: var(--accent); }
   .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 30px 22px; }
-  .tile { display: grid; gap: 10px; align-content: start; text-decoration: none; color: var(--ink); }
-  .tile .paper { padding: 16px 18px; display: grid; gap: 12px; transition: transform .15s; }
+  .tile { display: grid; grid-template-rows: auto 1fr; gap: 10px; text-decoration: none; color: var(--ink); }
+  .tile .paper { padding: 16px 18px; display: grid; gap: 12px; align-content: start; grid-template-rows: auto auto 1fr auto; transition: transform .15s; }
+  .tile .odds { align-self: start; }
   .tile:hover .paper { transform: translateY(-3px); }
   .tile .name { font: 400 36px/1 var(--serif); color: var(--paper-ink); }
   .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -55,8 +57,9 @@
 
   <section class="hero">
     <div class="sec-head"><div class="row"><span class="label">Decision model arcade</span><span class="meta">real Drex API answers · recorded 19–21 Oct 2026</span></div></div>
-    <h1>Watch a decision model play. Then try to <em>beat it.</em></h1>
-    <p class="subtitle">Drex reads the situation and returns a probability for every move it could make. No text to parse, no guessing what it meant.</p>
+    <h1>Five games. You against <em>Drex Max.</em></h1>
+    <p class="subtitle">Drex is a decision model: it reads each situation as text and returns a probability for every move it could make. Its moves here are real answers recorded from the hosted API. Yours are yours.</p>
+    <div class="row-btns"><a class="btn primary" href="stack/">Play Drex Stack</a><a class="btn" href="#benchmark">See the benchmark</a></div>
   </section>
 
   <section class="tiles">

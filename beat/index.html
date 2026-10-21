@@ -107,7 +107,7 @@ function ask(m, i, n, results) {
     bar.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: SECONDS * 1000, easing: 'linear', fill: 'forwards' });
     let done = false;
     const answer = (k) => {
-      if (done) return; done = true; clearTimeout(timer); document.removeEventListener('keydown', keyHandler);
+      if (done) return; done = true; clearTimeout(timer); removeEventListener('keydown', keyHandler);
       const secs = (performance.now() - started) / 1000, d = drex[m.id];
       stage.querySelectorAll('.choices button').forEach((b) => { b.disabled = true; if (b.dataset.k === m.label) b.classList.add('right'); else if (b.dataset.k === k) b.classList.add('wrong'); });
       const probs = d.probs;
@@ -119,7 +119,7 @@ function ask(m, i, n, results) {
     };
     stage.querySelectorAll('.choices button').forEach((b) => (b.onclick = () => answer(b.dataset.k)));
     keyHandler = (e) => { const k = KEYS.find((c) => CATEGORIES[c].key === e.key); if (k) answer(k); };
-    document.addEventListener('keydown', keyHandler);
+    addEventListener('keydown', keyHandler);
     const timer = setTimeout(() => answer(null), SECONDS * 1000);
   });
 }

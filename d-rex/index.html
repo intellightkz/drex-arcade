@@ -15,9 +15,6 @@
 <link rel="stylesheet" href="../shared.css">
 <script>if (/[?&]clip\b/.test(location.search)) document.documentElement.classList.add('clip');</script>
 <style>
-  .head { display: flex; justify-content: space-between; align-items: end; gap: 18px; flex-wrap: wrap; }
-  .head h1 { font-size: clamp(48px, 8vw, 84px); }
-  .head .subtitle { max-width: 64ch; margin-top: 8px; }
   #lanes { display: grid; gap: 22px; }
   .lane { display: grid; gap: 8px; }
   .lane .stats { font-variant-numeric: tabular-nums; }
@@ -34,7 +31,8 @@
   .pad { display: none; grid-template-columns: 1fr 1fr; gap: 10px; }
   .pad button { font: 700 15px var(--display); letter-spacing: .06em; text-transform: uppercase; padding: 20px 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 4px; touch-action: none; user-select: none; -webkit-user-select: none; }
   .pad button.on { border-color: var(--accent); color: var(--accent); }
-  @media (hover: none) { .pad { display: grid; } }
+  @media (hover: none), (max-width: 560px) { .pad { display: grid; } }
+  @media (max-width: 560px) { .lane .stats { display: none; } .pad button { padding: 16px 10px; } }
   .keys { font: 12.5px var(--display); color: var(--muted); }
   .keys kbd { font: 600 11.5px var(--display); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 1px 6px; color: var(--ink); }
 </style>
@@ -42,23 +40,28 @@
 <body>
 <div class="wrap">
   <div class="topbar"><a class="brand" href="../"><img src="../nace.png" alt="">nace.ai · Drex Arcade</a><nav><a href="../beat/">Beat Drex</a><a href="../drexman/">Drexman</a><a href="./" aria-current="page">D-Rex</a><a href="../stack/">Drex Stack</a><a href="../snake/">Drex Snake</a></nav></div>
-  <div class="sec-head"><div class="row"><span class="label">You vs Drex Max</span><span class="meta">real time · same obstacles · same speed</span></div><span class="subtitle">jump, duck or do nothing, decided per obstacle</span></div>
-  <div class="head">
-    <div><h1>D-Rex</h1><p class="subtitle">You see the obstacles. Drex Max only gets each one described in words and answers jump, duck or nothing over the network. The game keeps speeding up, so the time to react keeps shrinking for both of you.</p><p class="keys" style="margin-top:10px"><kbd>Space</kbd> or <kbd>↑</kbd> jump · <kbd>↓</kbd> duck (hold) · on a phone, the buttons under the race</p></div>
-    <div><button class="btn primary" id="start" type="button">Start the race</button></div>
+  <div class="game-head">
+    <div><div class="sec-head"><div class="row"><span class="label">You vs Drex Max</span><span class="meta">real time · same obstacles · same speed</span></div></div><h1>D-Rex</h1></div>
+    <div class="actions"><span class="keys"><kbd>Space</kbd> or <kbd>↑</kbd> jump · <kbd>↓</kbd> duck (hold) · <kbd>P</kbd> pause</span><button class="btn primary" id="start" type="button">Start the race</button></div>
   </div>
-  <div id="lanes"></div>
-  <div class="pad" id="pad"><button type="button" data-k="jump">Jump</button><button type="button" data-k="duck">Duck</button></div>
+  <section id="play">
+    <div id="lanes"></div>
+    <div class="pad" id="pad"><button type="button" data-k="jump">Jump</button><button type="button" data-k="duck">Duck</button></div>
+  </section>
   <div class="paper result" id="result" hidden></div>
+  <details class="how"><summary>How it works</summary>
+    <p>You see the obstacles. Drex Max only gets each one described in words and answers jump, duck or nothing over the network. The game keeps speeding up, so the time to react keeps shrinking for both of you; an answer that arrives too late is no use.</p>
+    <p>Drex Max's lane replays real Drex API answers recorded on 19 Oct 2026, one request at a time (seed 20261020). Each answer arrives after its measured round-trip time, so its speed counts exactly as it did live. Your lane runs on the same obstacles and the same physics. Add <a href="?clip">?clip</a> to the address for a clean frame to screen-record.</p>
+  </details>
   <section class="cta">
     <p><b>Fast, typed decisions for agents:</b> pick a tool, route a ticket, gate an action. New accounts get $25 of credit.</p>
     <a class="btn accent" href="https://console.nace.ai/?utm_source=arcade&amp;utm_medium=game&amp;utm_campaign=drex10000&amp;utm_content=d-rex">Get an API key</a>
   </section>
   <footer class="wordmark"><span class="lockup"><img src="../nace.png" alt="Nace.AI"><span class="big">Drex <em>Max</em></span></span><span class="tag">drexmaxxing >>></span></footer>
-  <p class="note">Drex Max's lane replays real Drex API answers recorded on 19 Oct 2026, one request at a time (seed 20261020). Each answer arrives after its measured round-trip time, so its speed counts exactly as it did live. Your lane runs on the same obstacles and the same physics. Add <a href="?clip">?clip</a> to the address for a clean frame to screen-record.</p>
 </div>
 <script type="module">
 import { W, H, GROUND, DINO_X, DUCK_H, DINO_H, ASK_PX, SPEED0, STEP, schedule, speedAt, travelled, obstacleX, newLane, stepLane, newHumanLane, stepHumanLane, simulate } from './engine.js';
+import { bringIntoView, whenAway } from '../game-ui.js';
 const replay = await fetch('replay.json').then((r) => r.json());
 const MODEL = 'drex-max';
 const sched = schedule(replay.seed, 400);
@@ -154,6 +157,8 @@ function draw(l, t, banner) {
 const press = () => { if (phase === 'run') input.jump = true; };
 const KEYS_JUMP = new Set([' ', 'ArrowUp', 'w', 'W']), KEYS_DUCK = new Set(['ArrowDown', 's', 'S']);
 addEventListener('keydown', (e) => {
+  if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') { paused ? resume() : pause(); return; }
+  if (paused) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); resume(); } return; }
   if (KEYS_JUMP.has(e.key)) { if (phase === 'idle' || phase === 'over') { if (e.key === ' ' && !e.repeat && document.activeElement?.tagName !== 'BUTTON' && performance.now() - overAt > 800) { e.preventDefault(); start(); } return; } e.preventDefault(); if (!e.repeat) press(); }
   if (KEYS_DUCK.has(e.key) && phase !== 'idle') { e.preventDefault(); input.duck = true; }
 });
@@ -161,16 +166,17 @@ addEventListener('keyup', (e) => { if (KEYS_DUCK.has(e.key)) input.duck = false;
 addEventListener('blur', () => { input.duck = false; input.jump = false; });
 for (const b of document.querySelectorAll('#pad button')) {
   const k = b.dataset.k;
-  b.addEventListener('pointerdown', (e) => { e.preventDefault(); b.classList.add('on'); if (k === 'jump') { if (phase === 'run') press(); else if (phase !== 'count') start(); } else input.duck = true; });
+  b.addEventListener('pointerdown', (e) => { e.preventDefault(); b.classList.add('on'); if (paused) return resume(); if (k === 'jump') { if (phase === 'run') press(); else if (phase !== 'count') start(); } else input.duck = true; });
   const up = () => { b.classList.remove('on'); if (k === 'duck') input.duck = false; };
   b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('pointerleave', up);
 }
-you.canvas.addEventListener('pointerdown', (e) => { if (phase === 'run') { e.preventDefault(); press(); } });
+you.canvas.addEventListener('pointerdown', (e) => { if (paused) return resume(); if (phase === 'run') { e.preventDefault(); press(); } });
 
-let phase = 'idle', simT = 0, acc = 0, last = 0, countFrom = 0, youResult = null, loopId = 0, overAt = 0;
+let phase = 'idle', paused = false, simT = 0, acc = 0, last = 0, countFrom = 0, youResult = null, loopId = 0, overAt = 0;
 const loop = (id) => requestAnimationFrame((now) => frame(now, id));
 function frame(now, id) {
   if (id !== loopId) return; // a newer race took over
+  if (paused) { last = now; for (const l of lanes) draw(l, simT, 'paused'); return loop(id); }
   if (phase === 'count') {
     const left = 3 - Math.floor((now - countFrom) / 1000);
     if (left > 0) { for (const l of lanes) draw(l, 0, String(left)); return loop(id); }
@@ -191,9 +197,13 @@ function frame(now, id) {
 function start() {
   if (phase === 'count' || phase === 'run') return;
   reset(); simT = 0; acc = 0; youResult = null; phase = 'count'; countFrom = performance.now();
-  document.getElementById('start').textContent = 'Race again';
+  document.getElementById('start').textContent = 'Race again'; bringIntoView(document.getElementById('play'));
   loop(++loopId);
 }
+// Pause when you leave the tab or window (only while your dino is still running).
+function pause() { if ((phase === 'run' || phase === 'count') && !paused) { paused = true; input.duck = false; input.jump = false; document.getElementById('start').textContent = 'Resume'; } }
+function resume() { if (!paused) return; paused = false; last = performance.now(); if (phase === 'count') countFrom = performance.now(); document.getElementById('start').textContent = 'Race again'; }
+whenAway(pause);
 function showResult() {
   const mine = Math.floor(travelled(you.diedAt) / 10), mySpeed = (you.diedSpeed / SPEED0).toFixed(1);
   const drexDone = !drex.alive, drexScore = drexDone ? Math.floor(travelled(drex.diedAt) / 10) : drexFinal.score;
@@ -212,7 +222,7 @@ function showResult() {
   document.getElementById('again').onclick = start;
   return true;
 }
-document.getElementById('start').addEventListener('click', (e) => { e.currentTarget.blur(); if (phase === 'run') phase = 'over'; start(); });
+document.getElementById('start').addEventListener('click', (e) => { e.currentTarget.blur(); if (paused) return resume(); if (phase === 'run') phase = 'over'; start(); });
 reset();
 document.fonts.ready.then(() => { if (phase === 'idle') for (const l of lanes) draw(l, 0); });
 </script>
