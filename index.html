@@ -7,7 +7,7 @@
 <meta name="description" content="Watch Drex, the decision model by Nace.AI, play games. Then try to beat it at sorting an inbox.">
 <meta property="og:title" content="Drex Arcade">
 <meta property="og:description" content="Watch a decision model play. Then try to beat it.">
-<meta property="og:image" content="https://drex-arcade.vercel.app/og.png">
+<meta property="og:image" content="https://drex-arcade-pi.vercel.app/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
   .hero { display: grid; gap: 14px; padding-block: 10px 4px; }
   .hero h1 { font-size: clamp(44px, 8vw, 92px); max-width: 15ch; }
   .hero h1 em { font-style: normal; color: var(--accent); }
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 30px 22px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 30px 22px; }
   .tile { display: grid; gap: 10px; align-content: start; text-decoration: none; color: var(--ink); }
   .tile .paper { padding: 16px 18px; display: grid; gap: 12px; transition: transform .15s; }
   .tile:hover .paper { transform: translateY(-3px); }
@@ -30,24 +30,41 @@
   .odds .row span:last-child { font: 500 13px var(--display); align-self: end; }
   .odds .row.pick { color: var(--accent-ink); }
   .play { font: 700 12.5px var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); }
+  .bench .paper { padding: 6px 18px 10px; overflow-x: auto; }
+  .bench table { width: 100%; border-collapse: collapse; min-width: 760px; }
+  .bench th { font: 500 10.5px var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--paper-muted); text-align: left; padding: 12px 10px 8px 0; border-bottom: 1px solid var(--paper-ink); white-space: nowrap; }
+  .bench td { padding: 10px 10px 10px 0; border-bottom: 1px solid var(--paper-line); vertical-align: baseline; font: 12.5px/1.4 var(--display); color: var(--paper-muted); }
+  .bench td.game { font: 400 22px/1.1 var(--serif); color: var(--paper-ink); white-space: nowrap; }
+  .bench td.game a { color: inherit; text-decoration: none; }
+  .bench td.game a:hover { color: var(--accent-ink); }
+  .bench td.res { font: 400 22px/1.1 var(--serif); color: var(--accent-ink); white-space: nowrap; }
+  .bench td.res small { display: block; font: 11.5px var(--display); color: var(--paper-muted); margin-top: 2px; white-space: normal; }
+  .bench td.r { font: 500 13px var(--display); color: var(--paper-ink); text-align: right; white-space: nowrap; }
+  .bench th.r { text-align: right; }
+  .bench td:nth-child(2) { min-width: 150px; }
+  .bench td.res { min-width: 210px; }
+  .bench tr:last-child td { border-bottom: 0; }
+  .method { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+  .method p { font: 13px/1.6 var(--display); color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; }
+  .method b { color: var(--ink); font-weight: 600; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar"><a class="brand" href="./"><img src="nace.png" alt="">nace.ai · Drex Arcade</a><nav><a href="beat/">Beat Drex</a><a href="drexman/">Drexman</a><a href="d-rex/">D-Rex</a><a href="stack/">Drex Stack</a></nav></div>
+  <div class="topbar"><a class="brand" href="./"><img src="nace.png" alt="">nace.ai · Drex Arcade</a><nav><a href="beat/">Beat Drex</a><a href="drexman/">Drexman</a><a href="d-rex/">D-Rex</a><a href="stack/">Drex Stack</a><a href="snake/">Drex Snake</a></nav></div>
 
   <section class="hero">
-    <div class="sec-head"><div class="row"><span class="label">Decision model arcade</span><span class="meta">real Drex API answers · recorded 19–20 Oct 2026</span></div></div>
+    <div class="sec-head"><div class="row"><span class="label">Decision model arcade</span><span class="meta">real Drex API answers · recorded 19–21 Oct 2026</span></div></div>
     <h1>Watch a decision model play. Then try to <em>beat it.</em></h1>
     <p class="subtitle">Drex reads the situation and returns a probability for every move it could make. No text to parse, no guessing what it meant.</p>
   </section>
 
   <section class="tiles">
     <a class="tile" href="beat/">
-      <div class="sec-head"><div class="row"><span class="label">You vs Drex</span><span class="meta">15 messages</span></div><span class="subtitle">sort an inbox faster and better than the model</span></div>
+      <div class="sec-head"><div class="row"><span class="label">You vs Drex</span><span class="meta">15 messages a round</span></div><span class="subtitle">sort an inbox faster and better than the model</span></div>
       <div class="paper">
         <span class="name">Beat Drex</span>
-        <div class="nums"><div><span class="num" id="b-right">…</span><span class="caps">sorted right</span></div><div><span class="num" id="b-ms">…</span><span class="caps">per message</span></div><div><span class="num">4 s</span><span class="caps">you get</span></div></div>
+        <div class="nums"><div><span class="num" id="b-right">…</span><span class="caps">all messages, sorted right</span></div><div><span class="num" id="b-ms">…</span><span class="caps">per message</span></div><div><span class="num">4 s</span><span class="caps">you get</span></div></div>
         <div class="odds"><div class="row pick"><span>spam / scam</span><span>100%</span></div><div class="row"><span>urgent</span><span>0%</span></div><div class="row"><span>can wait</span><span>0%</span></div></div>
         <span class="play">Play >>></span>
       </div>
@@ -79,6 +96,27 @@
         <span class="play">Play it >>></span>
       </div>
     </a>
+    <a class="tile" href="snake/">
+      <div class="sec-head"><div class="row"><span class="label">Snake</span><span class="meta">you vs Drex Max</span></div><span class="subtitle">one API call per move, odds for each way</span></div>
+      <div class="paper">
+        <span class="name">Drex Snake</span>
+        <div class="nums"><div><span class="num" id="n-apples">…</span><span class="caps">apples</span></div><div><span class="num" id="n-moves">…</span><span class="caps">moves = calls</span></div><div><span class="num" id="n-ms">…</span><span class="caps">per answer</span></div></div>
+        <div class="odds" id="n-odds"></div>
+        <span class="play">Play it >>></span>
+      </div>
+    </a>
+  </section>
+
+  <section class="bench" id="benchmark">
+    <div class="sec-head"><div class="row"><span class="label">Benchmark</span><span class="meta">drex-max · hosted API · one request at a time</span></div><span class="subtitle">every number below is computed in your browser from the recorded answers this site replays</span></div>
+    <div class="paper"><table><thead><tr><th>Game</th><th>Drex decides</th><th class="r">Options</th><th class="r">Calls</th><th>Drex Max result</th><th class="r">Avg answer</th><th class="r">p90</th><th class="r">Seed</th><th class="r">Your best</th></tr></thead><tbody id="bench-rows"></tbody></table></div>
+  </section>
+
+  <section class="method">
+    <p><b>Setup.</b> Model <span class="mono">drex-max</span> on the hosted endpoint <span class="mono">console.nace.ai/v1/systemone</span>, called from a laptop in Almaty, one request at a time. Answer times are full round trips, network included.</p>
+    <p><b>What Drex sees.</b> Only text: the situation and one typed question listing the options, with plain facts about each (for example "clears 1 row, no new holes"). No scores, no hints about which option is right, no images.</p>
+    <p><b>Replays.</b> Each game is deterministic for a seed, so a recording replays exactly: the page re-runs the game with Drex's recorded answers and recomputes the result. Recorders are in the <a href="https://github.com/intellightkz/drex-arcade">repo</a>.</p>
+    <p><b>You vs Drex.</b> Your game uses the same seed: same messages, obstacles, pieces or apples. Your best is kept in this browser only; nothing is sent anywhere.</p>
   </section>
 
   <section class="cta">
@@ -87,44 +125,83 @@
   </section>
 
   <footer class="wordmark"><span class="lockup"><img src="nace.png" alt="Nace.AI"><span class="big">Drex <em>Arcade</em></span></span><span class="tag">drexmaxxing >>></span></footer>
-  <p class="note">Made by Nace.AI. Every replay uses real answers from the hosted Drex API, recorded on 19–20 Oct 2026 one request at a time; the times shown are those round trips. Drexman shows the best of three Drex Max games recorded with jevman’s own bench (classic ghosts, 300 s cap); the three scored 2,880, 3,320 and 3,690. <a href="https://nace.ai/developers">Docs and models</a> · <a href="https://huggingface.co/nace-ai">Hugging Face</a> · <a href="https://openrouter.ai/nace-ai">OpenRouter</a></p>
+  <p class="note">Made by Nace.AI. Every replay uses real answers from the hosted Drex API, recorded on 19–21 Oct 2026 one request at a time; the times shown are those round trips. Drexman shows the best of three Drex Max games recorded with jevman’s own bench (classic ghosts, 300 s cap); the three scored 2,880, 3,320 and 3,690. <a href="https://nace.ai/developers">Docs and models</a> · <a href="https://huggingface.co/nace-ai">Hugging Face</a> · <a href="https://openrouter.ai/nace-ai">OpenRouter</a></p>
 </div>
 <script type="module">
-// Headline numbers come straight from the recordings.
+// Every number on this page is computed here from the recordings the games replay.
 const get = (p) => fetch(p).then((r) => (r.ok ? r.json() : null)).catch(() => null);
 const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-const [beat, stack, race, pac] = await Promise.all([get('beat/answers.json'), get('stack/replay.json'), get('d-rex/replay.json'), get('drexman/demo/drex-max.json')]);
-if (beat) {
+const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const fmt = (n) => n.toLocaleString('en-US');
+const secs = (ms) => (ms.length ? `${(ms.reduce((a, b) => a + b, 0) / ms.length / 1000).toFixed(2)} s` : '–');
+const p90 = (ms) => { if (!ms.length) return '–'; const s = [...ms].sort((a, b) => a - b); return `${(s[Math.min(s.length - 1, Math.floor(s.length * 0.9))] / 1000).toFixed(2)} s`; };
+const best = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+const oddsRows = (probs, choice) => Object.entries(probs).sort((a, b) => b[1] - a[1]).map(([k, p]) => `<div class="row ${k === choice ? 'pick' : ''}"><span>${esc(k)}</span><span>${Math.round(p * 100)}%</span></div>`).join('');
+const bench = [];
+// One card failing (a missing or partial file) must not blank the others.
+const block = async (name, fn) => { try { await fn(); } catch (err) { console.warn(`${name}: ${err.message}`); } };
+const [beat, stack, race, pac, snk] = await Promise.all([get('beat/answers.json'), get('stack/replay.json'), get('d-rex/replay.json'), get('drexman/demo/drex-max.json'), get('snake/replay.json')]);
+
+await block('beat', async () => {
+  if (!beat) return;
   const { MESSAGES } = await import('./beat/messages.js');
-  const a = beat.answers['drex-max'];
-  set('b-right', `${a.filter((x, i) => x.choice === MESSAGES[i].label).length}/${a.length}`);
-  set('b-ms', `${(a.reduce((s, x) => s + x.ms, 0) / a.length / 1000).toFixed(2)} s`);
-}
-if (pac) {
+  const a = beat.answers['drex-max'], byId = Object.fromEntries(a.map((x) => [x.id, x]));
+  const right = MESSAGES.filter((m) => byId[m.id]?.choice === m.label).length, ms = a.map((x) => x.ms);
+  set('b-right', `${right}/${MESSAGES.length}`); set('b-ms', secs(ms));
+  bench.push({ order: 1, game: 'Beat Drex', href: 'beat/', decides: 'spam, urgent or can wait', options: '3', calls: a.length, result: `${right}/${MESSAGES.length}`, sub: `every message in the pool sorted right; a round draws 15 of them`, avg: secs(ms), p90: p90(ms), seed: `${MESSAGES.length}-message set`, you: best('drex-arcade.beat.best') });
+});
+await block('drexman', async () => {
+  if (!pac) return;
   const calls = pac.events.filter(([, e]) => e.type === 'call'), picks = pac.events.filter(([, e]) => e.type === 'decision').map(([, e]) => e.decision);
-  set('p-score', pac.final.score.toLocaleString('en-US')); set('p-dec', picks.length);
-  set('p-ms', `${(calls.reduce((s, [, e]) => s + e.latencyMs, 0) / calls.length / 1000).toFixed(2)} s`);
+  const ms = calls.map(([, e]) => e.latencyMs);
+  set('p-score', fmt(pac.final.score)); set('p-dec', picks.length); set('p-ms', secs(ms));
   // A real junction from the game: three ways open and a clear but not certain pick
   const d = picks.find((x) => x.options.length === 3 && x.probabilities[x.choice] > 0.6 && x.probabilities[x.choice] < 0.95) ?? picks[0];
-  const rows = Object.entries(d.probabilities).sort((a, b) => b[1] - a[1]);
-  document.getElementById('p-odds').innerHTML = rows.map(([k, p]) => `<div class="row ${k === d.choice ? 'pick' : ''}"><span>${k}</span><span>${Math.round(p * 100)}%</span></div>`).join('');
-}
-if (race) {
+  if (d) document.getElementById('p-odds').innerHTML = oddsRows(d.probabilities, d.choice);
+  bench.push({ order: 5, game: 'Drexman', href: 'drexman/', decides: 'which way at a junction', options: '2–3', calls: calls.length, result: fmt(pac.final.score), sub: 'Pac-Man points, best of 3 (2,880 · 3,320 · 3,690)', avg: secs(ms), p90: p90(ms), seed: 'jevman bench', you: best('jevman.best') && fmt(Number(best('jevman.best'))) });
+});
+await block('d-rex', async () => {
+  if (!race) return;
   const dx = await import('./d-rex/engine.js');
-  const sch = dx.schedule(race.seed, 400), mx = dx.simulate(race.runs['drex-max'], sch), ms = race.runs['drex-max'].map((d) => d.ms);
-  set('d-max', mx.score.toLocaleString('en-US')); set('d-speed', `${mx.speed}×`); set('d-ms', `${(ms.reduce((a, b) => a + b, 0) / ms.length / 1000).toFixed(2)} s`);
-}
-if (stack) {
+  const run = race.runs['drex-max'], sch = dx.schedule(race.seed, 400), mx = dx.simulate(run, sch);
+  const used = run.slice(0, mx.decisions).map((d) => d.ms); // obstacles are asked in order, so these are the answers the run used
+  set('d-max', fmt(mx.score)); set('d-speed', `${mx.speed}×`); set('d-ms', secs(used));
+  const mine = best('drex-arcade.d-rex.best');
+  bench.push({ order: 2, game: 'D-Rex', href: 'd-rex/', decides: 'jump, duck or nothing', options: '3', calls: mx.decisions, result: fmt(mx.score), sub: `distance, reached ${mx.speed}× speed; ${mx.late} answers came too late to use`, avg: secs(used), p90: p90(used), seed: race.seed, you: mine && fmt(Number(mine)) });
+});
+await block('stack', async () => {
+  if (!stack) return;
   const sm = await import('./stack/engine.js');
-  const rows = {};
-  for (const [model, run] of Object.entries(stack.runs)) {
-    const seq = sm.pieceSequence(stack.seed, stack.maxPieces + 2), garbage = sm.garbageHoles(stack.seed, 100);
-    let b = sm.emptyBoard(), lines = 0;
-    run.forEach((d, i) => { const { list } = sm.requestFor(b, seq, i, lines, stack.version); const p = list.find((o) => o.key === d.choice) ?? list[0]; b = sm.normalize(p.after); lines += p.cleared; if ((i + 1) % sm.GARBAGE_EVERY === 0) b = sm.addGarbage(b, garbage[(i + 1) / sm.GARBAGE_EVERY]).board; });
-    rows[model] = lines;
+  const run = stack.runs['drex-max'], seq = sm.pieceSequence(stack.seed, stack.maxPieces + 2), garbage = sm.garbageHoles(stack.seed, 100);
+  let b = sm.emptyBoard(), lines = 0, pieces = 0, toppedOut = false;
+  for (const [i, d] of run.entries()) {
+    const { list } = sm.requestFor(b, seq, i, lines, stack.version);
+    if (!list.length) { toppedOut = true; break; }
+    const p = list.find((o) => o.key === d.choice) ?? list[0];
+    b = sm.normalize(p.after); lines += p.cleared; pieces++;
+    if (pieces % sm.GARBAGE_EVERY === 0) { const r = sm.addGarbage(b, garbage[pieces / sm.GARBAGE_EVERY]); if (r.toppedOut) { toppedOut = true; break; } b = r.board; }
   }
-  set('s-max', rows['drex-max']); const sms = stack.runs['drex-max'].map((d) => d.ms); set('s-ms', `${(sms.reduce((a, b) => a + b, 0) / sms.length / 1000).toFixed(2)} s`);
-}
+  const ms = run.slice(0, pieces).map((d) => d.ms);
+  set('s-max', lines); set('s-ms', secs(ms));
+  const mine = best('drex-arcade.stack.best');
+  bench.push({ order: 3, game: 'Drex Stack', href: 'stack/', decides: 'where to drop the piece', options: 'up to 34', calls: pieces, result: `${lines} rows`, sub: toppedOut ? `topped out after ${pieces} pieces` : `in ${pieces} pieces, never topped out`, avg: secs(ms), p90: p90(ms), seed: stack.seed, you: mine && `${mine} rows` });
+});
+await block('snake', async () => {
+  if (!snk) return;
+  const sn = await import('./snake/engine.js');
+  const run = snk.runs['drex-max'], g = sn.newGame(snk.seed);
+  let sample = null;
+  for (const d of run) { if (!g.alive) break; if (!sample && g.apples >= 3 && Object.keys(d.probs).length === 3 && d.probs[d.choice] > 0.6 && d.probs[d.choice] < 0.95) sample = d; sn.step(g, d.choice); }
+  const ms = run.map((d) => d.ms);
+  set('n-apples', g.apples); set('n-moves', fmt(g.steps)); set('n-ms', secs(ms));
+  const s = sample ?? run[0];
+  if (s) document.getElementById('n-odds').innerHTML = oddsRows(s.probs, s.choice);
+  const end = g.alive ? 'recording ends here' : g.why.startsWith('reached') ? `never crashed: ${g.why}` : g.why;
+  const mine = best('drex-arcade.snake.best');
+  bench.push({ order: 4, game: 'Drex Snake', href: 'snake/', decides: 'up, down, left or right', options: '3', calls: run.length, result: `${g.apples} apples`, sub: `in ${fmt(g.steps)} moves; ${end}`, avg: secs(ms), p90: p90(ms), seed: snk.seed, you: mine && `${mine} apples` });
+});
+
+document.getElementById('bench-rows').innerHTML = bench.sort((a, b) => a.order - b.order).map((r) => `<tr><td class="game"><a href="${esc(r.href)}">${esc(r.game)}</a></td><td>${esc(r.decides)}</td><td class="r">${esc(r.options)}</td><td class="r">${fmt(r.calls)}</td><td class="res">${esc(r.result)}<small>${esc(r.sub)}</small></td><td class="r">${r.avg}</td><td class="r">${r.p90}</td><td class="r">${esc(r.seed)}</td><td class="r">${r.you ? esc(r.you) : `<a href="${esc(r.href)}">play</a>`}</td></tr>`).join('');
 </script>
 </body>
 </html>

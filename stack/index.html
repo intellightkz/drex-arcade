@@ -7,7 +7,7 @@
 <meta name="description" content="Play a falling-block puzzle against Drex Max, a decision model by Nace.AI. Same pieces, same garbage rows.">
 <meta property="og:title" content="Drex Stack: you vs Drex Max">
 <meta property="og:description" content="Same 150 pieces, same garbage rows. You stack; Drex Max picks each drop from a list of up to 34. Who clears more rows?">
-<meta property="og:image" content="https://drex-arcade.vercel.app/og.png">
+<meta property="og:image" content="https://drex-arcade-pi.vercel.app/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,7 +53,8 @@
   @media (max-width: 560px) {
     .boards { grid-template-columns: 1fr 1fr; gap: 10px; }
     .board .paper { grid-template-columns: 1fr; padding: 8px; }
-    .board .side > :not(.rows-num) { display: none; }
+    .board .side > :not(.rows-num, .next-box) { display: none; }
+    .board .side { grid-template-columns: 1fr auto; align-items: end; }
     .rows-num .num { font-size: 32px; }
     canvas.grid { width: 100%; height: auto; }
     .board .meta { display: none; }
@@ -62,7 +63,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar"><a class="brand" href="../"><img src="../nace.png" alt="">nace.ai · Drex Arcade</a><nav><a href="../beat/">Beat Drex</a><a href="../drexman/">Drexman</a><a href="../d-rex/">D-Rex</a><a href="./" aria-current="page">Drex Stack</a></nav></div>
+  <div class="topbar"><a class="brand" href="../"><img src="../nace.png" alt="">nace.ai · Drex Arcade</a><nav><a href="../beat/">Beat Drex</a><a href="../drexman/">Drexman</a><a href="../d-rex/">D-Rex</a><a href="./" aria-current="page">Drex Stack</a><a href="../snake/">Drex Snake</a></nav></div>
   <div class="sec-head"><div class="row"><span class="label">You vs Drex Max</span><span class="meta">same 150 pieces · same garbage rows</span></div><span class="subtitle">picks one drop from a list, with a probability for each</span></div>
   <div class="head">
     <div><h1>Drex Stack</h1><p class="subtitle">You stack the pieces yourself. Drex Max gets the same piece as a list of every place it can drop, with what each drop would do, and picks one. A garbage row rises every 12 pieces. Most rows cleared in 150 pieces wins.</p>
@@ -98,7 +99,7 @@ const fits = (b, cells, ox, oy) => cells.every(([x, y]) => { const X = x + ox, Y
 function makeBoard(cfg) {
   const el = document.createElement('section'); el.className = `board ${cfg.key}`;
   const side = cfg.key === 'you'
-    ? `<div class="rows-num"><span class="num">0</span><span class="caps">rows cleared</span></div><div><span class="caps">Next</span><canvas class="next" width="64" height="32" style="display:block;margin-top:6px"></canvas></div><div class="stats"></div><p class="help">← → move · ↑ turn<br>↓ soft drop · Space drop</p>`
+    ? `<div class="rows-num"><span class="num">0</span><span class="caps">rows cleared</span></div><div class="next-box"><span class="caps">Next</span><canvas class="next" width="64" height="32" style="display:block;margin-top:6px"></canvas></div><div class="stats"></div><p class="help">← → move · ↑ turn<br>↓ soft drop · Space drop</p>`
     : `<div class="rows-num"><span class="num">0</span><span class="caps">rows cleared</span></div><div><span class="caps">Drex's top picks</span><div class="opts"></div></div><div class="stats"></div>`;
   el.innerHTML = `<div class="sec-head"><div class="row"><span class="label">${cfg.name}</span><span class="meta status">ready</span></div></div>
     <div class="paper"><canvas class="grid" width="${W * CELL}" height="${H * CELL}"></canvas><div class="side">${side}</div><div class="toast"></div></div>`;
@@ -239,6 +240,7 @@ addEventListener('keydown', (e) => {
   e.preventDefault(); if (e.key === ' ' && e.repeat) return; f();
 });
 addEventListener('keyup', (e) => { if (e.key === 'ArrowDown' || e.key === 's') soft = false; });
+addEventListener('blur', () => { soft = false; });
 const PAD = { left: () => tryMove(-1, 0), right: () => tryMove(1, 0), turn, drop: hardDrop };
 for (const b of document.querySelectorAll('#pad button')) {
   const k = b.dataset.k; let rep = null;
@@ -246,7 +248,7 @@ for (const b of document.querySelectorAll('#pad button')) {
     e.preventDefault(); b.classList.add('on');
     if (phase === 'idle' || phase === 'over') return start();
     if (k === 'soft') { soft = true; return; }
-    PAD[k](); if (k === 'left' || k === 'right') rep = setInterval(PAD[k], 110);
+    PAD[k](); clearInterval(rep); if (k === 'left' || k === 'right') rep = setInterval(PAD[k], 110);
   });
   const up = () => { b.classList.remove('on'); clearInterval(rep); if (k === 'soft') soft = false; };
   b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('pointerleave', up);

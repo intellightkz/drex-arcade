@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drex Snake</title>
+<meta name="description" content="Play Snake against Drex Max, a decision model by Nace.AI. Same board, same apples; every one of its moves was a real API call.">
+<meta property="og:title" content="Drex Snake: you vs Drex Max">
+<meta property="og:description" content="Same board, same apples. You steer; Drex Max picks every move from a list of facts. Who eats more?">
+<meta property="og:image" content="https://drex-arcade-pi.vercel.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500;700;800&family=Onest:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../shared.css">
+<script>if (/[?&]clip\b/.test(location.search)) document.documentElement.classList.add('clip');</script>
+<style>
+  .head { display: flex; justify-content: space-between; align-items: end; gap: 18px; flex-wrap: wrap; }
+  .head h1 { font-size: clamp(48px, 8vw, 84px); }
+  .head .subtitle { max-width: 64ch; margin-top: 8px; }
+  .keys { font: 12.5px var(--display); color: var(--muted); margin-top: 10px; }
+  .keys kbd { font: 600 11.5px var(--display); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 1px 6px; color: var(--ink); }
+  .boards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr)); gap: 22px; }
+  .board { display: grid; gap: 8px; min-width: 0; align-content: start; }
+  .board.you .label { color: var(--ink); }
+  .board .paper { padding: 14px; display: grid; grid-template-columns: auto 1fr; gap: 16px; position: relative; }
+  .score { display: flex; align-items: baseline; gap: 8px; }
+  .score .num { font-size: 44px; }
+  canvas.grid { display: block; border: 1px solid var(--paper-line); touch-action: none; }
+  .side { display: grid; gap: 14px; align-content: start; min-width: 0; }
+  .odds { display: grid; gap: 6px; margin-top: 4px; }
+  .odds .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; font: 400 19px/1.15 var(--serif); }
+  .odds .row span:nth-child(2) { font: 500 12.5px var(--display); align-self: end; }
+  .odds .why { grid-column: 1 / -1; font: 11px/1.35 var(--display); color: var(--paper-muted); }
+  .odds .bar { grid-column: 1 / -1; height: 1px; background: var(--paper-line); }
+  .odds .bar i { display: block; height: 100%; background: var(--paper-muted); }
+  .odds .row.pick { color: var(--accent-ink); } .odds .row.pick .bar { height: 2px; } .odds .row.pick .bar i { background: var(--accent-ink); }
+  .stats { font: 12px var(--display); color: var(--paper-muted); font-variant-numeric: tabular-nums; line-height: 1.75; border-top: 1px solid var(--paper-line); padding-top: 8px; }
+  .stats b { color: var(--paper-ink); }
+  .help { font: 11.5px/1.6 var(--display); color: var(--paper-muted); }
+  .pad { display: none; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .pad button { font: 700 20px var(--display); padding: 16px 0; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 4px; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .pad button.on { border-color: var(--accent); color: var(--accent); }
+  @media (hover: none) { .pad { display: grid; } }
+  .result { padding: 18px 20px; display: grid; gap: 14px; }
+  .result .verdict { font: 400 clamp(26px, 4vw, 36px)/1.1 var(--serif); }
+  .result .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .result .nums div { display: grid; gap: 3px; border-top: 1px solid var(--paper-line); padding-top: 8px; }
+  .result .nums .win .num { color: var(--accent-ink); }
+  .result .row-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  @media (max-width: 560px) {
+    .boards { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .board .paper { grid-template-columns: 1fr; padding: 8px; }
+    .board .side > :not(.score) { display: none; }
+    .score .num { font-size: 32px; }
+    canvas.grid { width: 100%; height: auto; }
+    .board .meta { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar"><a class="brand" href="../"><img src="../nace.png" alt="">nace.ai · Drex Arcade</a><nav><a href="../beat/">Beat Drex</a><a href="../drexman/">Drexman</a><a href="../d-rex/">D-Rex</a><a href="../stack/">Drex Stack</a><a href="./" aria-current="page">Drex Snake</a></nav></div>
+  <div class="sec-head"><div class="row"><span class="label">You vs Drex Max</span><span class="meta">same board · same apples</span></div><span class="subtitle">one API call per move, a probability for each way</span></div>
+  <div class="head">
+    <div><h1>Drex Snake</h1><p class="subtitle">You steer your snake. Drex Max steered its own, one move at a time: for every step it got the board and a few facts about each way it could turn, and picked one. Its game replays here at your speed. Most apples wins.</p>
+      <p class="keys"><kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd> or <kbd>WASD</kbd> steer · on a phone, swipe on your board or use the buttons</p></div>
+    <div><button class="btn primary" id="start" type="button">Start</button></div>
+  </div>
+  <div class="boards" id="boards"></div>
+  <div class="pad" id="pad"><button type="button" data-k="left" aria-label="Left">◀</button><button type="button" data-k="up" aria-label="Up">▲</button><button type="button" data-k="down" aria-label="Down">▼</button><button type="button" data-k="right" aria-label="Right">▶</button></div>
+  <div class="paper result" id="result" hidden></div>
+  <section class="cta">
+    <p><b>A decision per step, with odds you can act on.</b> Steering, routing and picking the next action is what Drex does for agents. New accounts get $25 of credit.</p>
+    <a class="btn accent" href="https://console.nace.ai/?utm_source=arcade&amp;utm_medium=game&amp;utm_campaign=drex10000&amp;utm_content=snake">Get an API key</a>
+  </section>
+  <footer class="wordmark"><span class="lockup"><img src="../nace.png" alt="Nace.AI"><span class="big">Drex <em>Max</em></span></span><span class="tag">drexmaxxing >>></span></footer>
+  <p class="note" id="note"></p>
+</div>
+<script type="module">
+import { N, DIRS, OPPOSITE, newGame, step, options, applePlan } from './engine.js';
+const replay = await fetch('replay.json').then((r) => r.json());
+const MODEL = 'drex-max', run = replay.runs[MODEL];
+const plan = applePlan(replay.seed, run); // your apples appear where Drex's did, in the same order
+const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const CELL = 24;
+const TOKENS = { bg: 'paper', ink: 'paper-ink', muted: 'paper-muted', line: 'paper-line', accent: 'accent-ink', bad: 'bad-ink', amber: 'amber-ink' };
+let colors = {};
+const readColors = () => { const s = getComputedStyle(document.documentElement); colors = Object.fromEntries(Object.entries(TOKENS).map(([k, v]) => [k, s.getPropertyValue('--' + v).trim()])); };
+readColors();
+const BEST_KEY = 'drex-arcade.snake.best';
+const readBest = () => { try { return Number(localStorage.getItem(BEST_KEY)) || 0; } catch { return 0; } };
+const saveBest = (n) => { try { localStorage.setItem(BEST_KEY, String(n)); } catch {} };
+const avgMs = Math.round(run.reduce((a, d) => a + d.ms, 0) / run.length);
+document.getElementById('note').innerHTML = `Drex Max's board replays one game recorded on ${new Date(replay.recordedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} through the hosted Drex API, one request at a time (seed ${replay.seed}, ${run.length} moves, ${avgMs} ms per move on average). Live, every move waited for its answer; here it plays at your speed so the boards stay side by side. Your board starts from the same position and gets the same apples in the same order (unless one would land on your snake). Add <a href="?clip">?clip</a> to the address for a clean frame to screen-record.`;
+
+function makeBoard(cfg) {
+  const el = document.createElement('section'); el.className = `board ${cfg.key}`;
+  const side = cfg.key === 'you'
+    ? `<div class="score"><span class="num">0</span><span class="caps">apples</span></div><div class="stats"></div><p class="help">arrows or WASD to steer<br>swipe on a phone</p>`
+    : `<div class="score"><span class="num">0</span><span class="caps">apples</span></div><div><span class="caps">Drex's eye</span><div class="odds"></div></div><div class="stats"></div>`;
+  el.innerHTML = `<div class="sec-head"><div class="row"><span class="label">${cfg.name}</span><span class="meta status">ready</span></div></div>
+    <div class="paper"><canvas class="grid" width="${N * CELL}" height="${N * CELL}"></canvas><div class="side">${side}</div></div>`;
+  document.getElementById('boards').appendChild(el);
+  const q = (s) => el.querySelector(s);
+  return { cfg, ctx: q('canvas.grid').getContext('2d'), canvas: q('canvas.grid'), odds: q('.odds'), stats: q('.stats'), status: q('.status'), scoreEl: q('.score .num') };
+}
+const you = makeBoard({ key: 'you', name: 'You' }), drex = makeBoard({ key: 'drex', name: 'Drex Max' });
+
+function draw(b) {
+  const g = b.g, c = b.ctx, S = N * CELL;
+  c.fillStyle = colors.bg; c.fillRect(0, 0, S, S);
+  c.strokeStyle = colors.line; c.lineWidth = 1;
+  for (let i = 1; i < N; i++) { c.beginPath(); c.moveTo(i * CELL + .5, 0); c.lineTo(i * CELL + .5, S); c.stroke(); c.beginPath(); c.moveTo(0, i * CELL + .5); c.lineTo(S, i * CELL + .5); c.stroke(); }
+  if (g.apple) { c.fillStyle = colors.bad; c.beginPath(); c.arc(g.apple[0] * CELL + CELL / 2, g.apple[1] * CELL + CELL / 2, CELL / 2 - 4, 0, Math.PI * 2); c.fill(); }
+  g.snake.forEach(([x, y], i) => { c.fillStyle = i === 0 ? (g.alive ? colors.accent : colors.bad) : colors.ink; c.fillRect(x * CELL + 2, y * CELL + 2, CELL - 4, CELL - 4); });
+  if (b.banner || !g.alive) {
+    const txt = b.banner || (b.finished ? `${g.apples} apples · ${g.why}` : '');
+    if (txt) { c.fillStyle = colors.bg; c.globalAlpha = .88; c.fillRect(0, S / 2 - 30, S, 60); c.globalAlpha = 1; c.fillStyle = b.banner ? colors.ink : colors.bad; c.font = `italic ${b.banner ? 60 : 22}px "Instrument Serif", Georgia, serif`; c.textAlign = 'center'; c.fillText(txt, S / 2, S / 2 + (b.banner ? 20 : 7)); c.textAlign = 'left'; }
+  }
+  b.scoreEl.textContent = g.apples;
+  b.stats.innerHTML = `length <b>${g.snake.length}</b> · moves <b>${g.steps}</b>` + (b === drex ? `<br>avg answer <b>${avgMs} ms</b>` : `<br>best <b>${readBest()}</b> apples`);
+}
+function showOdds(i) {
+  const d = run[i]; if (!d) return;
+  const facts = Object.fromEntries(options(drex.g).map((o) => [o.dir, o.text.split(': ')[1]]));
+  const rows = Object.entries(d.probs).sort((a, b) => b[1] - a[1]);
+  drex.odds.innerHTML = rows.map(([k, p]) => `<div class="row ${k === d.choice ? 'pick' : ''}"><span>${esc(k)}</span><span>${Math.round(p * 100)}%</span><span class="why">${esc(facts[k] ?? '')}</span><span class="bar"><i style="width:${p * 100}%"></i></span></div>`).join('');
+  drex.status.textContent = `move ${i + 1} · answered in ${d.ms} ms`;
+}
+function drexStep() {
+  const g = drex.g; if (!g.alive) return;
+  const i = g.steps;
+  if (!run[i]) { g.alive = false; g.why = 'end of the recording'; drex.finished = true; drex.status.textContent = `recording ends after ${i} moves`; return; } // never invent moves
+  showOdds(i);
+  step(g, run[i].choice);
+  if (!g.alive) { drex.finished = true; drex.status.textContent = `${g.why} after ${g.steps} moves`; }
+}
+
+let phase = 'idle', queue = [], acc = 0, last = 0, countFrom = 0, loopId = 0;
+const tickMs = () => Math.max(75, 140 - you.g.apples * 2);
+const loop = (id) => requestAnimationFrame((now) => frame(now, id));
+function frame(now, id) {
+  if (id !== loopId) return;
+  if (phase === 'count') {
+    const left = 3 - Math.floor((now - countFrom) / 1000);
+    if (left > 0) { you.banner = drex.banner = String(left); draw(you); draw(drex); return loop(id); }
+    you.banner = drex.banner = ''; phase = 'run'; last = now; you.status.textContent = 'your move';
+  }
+  if (phase === 'run') {
+    acc += Math.min(250, now - last); last = now;
+    while (phase === 'run' && acc >= tickMs()) {
+      acc -= tickMs();
+      const g = you.g;
+      while (queue.length && (queue[0] === g.dir || queue[0] === OPPOSITE[g.dir])) queue.shift();
+      step(g, queue.shift() ?? g.dir);
+      drexStep();
+      if (!g.alive) { you.finished = true; you.status.textContent = `${g.why} after ${g.steps} moves`; finishYou(); }
+    }
+  }
+  draw(you); draw(drex);
+  if (phase === 'run' || phase === 'count') loop(id);
+}
+function finishYou() {
+  saveBest(Math.max(readBest(), you.g.apples));
+  phase = 'replay';
+  const ff = () => { if (!drex.g.alive) { phase = 'over'; draw(drex); draw(you); return showResult(); } drexStep(); draw(drex); setTimeout(ff, 12); };
+  ff();
+}
+function showResult() {
+  const a = you.g.apples, b = drex.g.apples, won = a > b, tie = a === b;
+  const verdict = won ? `You beat Drex Max by ${a - b} apple${a - b === 1 ? '' : 's'}.` : tie ? 'A tie with Drex Max.' : `Drex Max ate ${b} apples. You ate ${a}.`;
+  const url = location.origin + location.pathname;
+  const share = won ? `I beat Drex Max at Snake: ${a} apples vs ${b}. Your turn: ${url}` : `I ate ${a} apples in Drex Snake. Drex Max, a decision model making one API call per move, ate ${b}. Beat it: ${url}`;
+  const el = document.getElementById('result'); el.hidden = false;
+  el.innerHTML = `<span class="caps">Result</span><span class="verdict">${verdict}</span>
+    <div class="nums"><div class="${won ? 'win' : ''}"><span class="num">${a}</span><span class="caps">You · ${you.g.steps} moves · ${you.g.why} · best ${readBest()}</span></div>
+    <div class="${won ? '' : 'win'}"><span class="num">${b}</span><span class="caps">Drex Max · ${drex.g.steps} moves · ${drex.g.why} · ${avgMs} ms avg answer</span></div></div>
+    <div class="row-btns"><a class="btn primary" target="_blank" rel="noopener" href="https://x.com/intent/post?text=${encodeURIComponent(share)}">Post on X</a><button class="btn" type="button" id="again">Play again</button></div>`;
+  document.getElementById('again').onclick = start;
+  document.getElementById('start').textContent = 'Play again';
+}
+function reset() {
+  for (const b of [you, drex]) { b.g = newGame(replay.seed, b === you ? plan : null); b.banner = ''; b.finished = false; b.status.textContent = 'ready'; if (b.odds) b.odds.innerHTML = ''; draw(b); }
+  queue = []; acc = 0;
+  document.getElementById('result').hidden = true;
+}
+function start() {
+  if (phase === 'count' || phase === 'replay') return;
+  reset(); phase = 'count'; countFrom = performance.now();
+  document.getElementById('start').textContent = 'Restart';
+  loop(++loopId);
+}
+addEventListener('blur', () => { queue = []; });
+const KEYMAP = { arrowup: 'up', w: 'up', arrowdown: 'down', s: 'down', arrowleft: 'left', a: 'left', arrowright: 'right', d: 'right' };
+const steer = (dir) => { if (phase === 'run' && queue.length < 3) queue.push(dir); };
+addEventListener('keydown', (e) => {
+  const dir = KEYMAP[e.key.toLowerCase()];
+  if (dir && (phase === 'run' || phase === 'count')) { e.preventDefault(); steer(dir); return; }
+  if (e.key === ' ' && (phase === 'idle' || phase === 'over') && document.activeElement?.tagName !== 'BUTTON') { e.preventDefault(); start(); }
+});
+for (const b of document.querySelectorAll('#pad button')) {
+  b.addEventListener('pointerdown', (e) => { e.preventDefault(); b.classList.add('on'); if (phase === 'idle' || phase === 'over') return start(); steer(b.dataset.k); });
+  const up = () => b.classList.remove('on'); b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('pointerleave', up);
+}
+let touch = null;
+you.canvas.addEventListener('pointerdown', (e) => { touch = [e.clientX, e.clientY]; });
+you.canvas.addEventListener('pointerup', (e) => {
+  if (!touch) return; const dx = e.clientX - touch[0], dy = e.clientY - touch[1]; touch = null;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < 18) return;
+  steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'));
+});
+document.getElementById('start').addEventListener('click', (e) => { e.currentTarget.blur(); if (phase === 'run') phase = 'idle'; start(); });
+reset();
+document.fonts.ready.then(() => { if (phase === 'idle') { draw(you); draw(drex); } });
+</script>
+</body>
+</html>
