@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Drex Stack</title>
-<meta name="description" content="Drex Max and Drex v2.0 play a falling-block puzzle, weighing up to 34 drops per piece.">
-<meta property="og:title" content="Drex Stack: Drex Max vs Drex v2.0">
-<meta property="og:description" content="A falling-block puzzle where a decision model weighs up to 34 drops for every piece.">
+<meta name="description" content="Play a falling-block puzzle against Drex Max, a decision model by Nace.AI. Same pieces, same garbage rows.">
+<meta property="og:title" content="Drex Stack: you vs Drex Max">
+<meta property="og:description" content="Same 150 pieces, same garbage rows. You stack; Drex Max picks each drop from a list of up to 34. Who clears more rows?">
 <meta property="og:image" content="https://drex-arcade.vercel.app/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../favicon.png" type="image/png">
@@ -18,13 +18,15 @@
   .head { display: flex; justify-content: space-between; align-items: end; gap: 18px; flex-wrap: wrap; }
   .head h1 { font-size: clamp(48px, 8vw, 84px); }
   .head .subtitle { max-width: 64ch; margin-top: 8px; }
-  .controls { display: flex; gap: 8px; flex-wrap: wrap; }
-  .boards { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 22px; }
-  .board { display: grid; gap: 8px; min-width: 0; }
+  .keys { font: 12.5px var(--display); color: var(--muted); margin-top: 10px; }
+  .keys kbd { font: 600 11.5px var(--display); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 1px 6px; color: var(--ink); }
+  .boards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 22px; }
+  .board { display: grid; gap: 8px; min-width: 0; align-content: start; }
+  .board.you .label { color: var(--ink); }
   .board .paper { padding: 14px; display: grid; grid-template-columns: auto 1fr; gap: 16px; position: relative; }
   .rows-num { display: flex; align-items: baseline; gap: 8px; }
   .rows-num .num { font-size: 44px; }
-  canvas.grid { display: block; border: 1px solid var(--paper-line); }
+  canvas.grid { display: block; border: 1px solid var(--paper-line); touch-action: none; }
   .side { display: grid; gap: 14px; align-content: start; min-width: 0; }
   .opts { display: grid; gap: 8px; margin-top: 4px; }
   .opt .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; font: 400 18px/1.15 var(--serif); }
@@ -35,100 +37,223 @@
   .opt.pick .row { color: var(--accent-ink); } .opt.pick .bar { height: 2px; } .opt.pick .bar i { background: var(--accent-ink); }
   .stats { font: 12px var(--display); color: var(--paper-muted); font-variant-numeric: tabular-nums; line-height: 1.75; border-top: 1px solid var(--paper-line); padding-top: 8px; }
   .stats b { color: var(--paper-ink); }
+  .help { font: 11.5px/1.6 var(--display); color: var(--paper-muted); }
   .toast { position: absolute; left: 34px; top: 44%; font: italic 400 44px var(--serif); color: var(--amber-ink); opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .2s, transform .2s; }
   .toast.show { opacity: 1; transform: none; }
-  @media (max-width: 560px) { .boards { grid-template-columns: 1fr; } .board .paper { grid-template-columns: 1fr; } canvas.grid { width: 100%; height: auto; } }
+  .pad { display: none; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .pad button { font: 700 20px var(--display); padding: 16px 0; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 4px; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .pad button.on { border-color: var(--accent); color: var(--accent); }
+  @media (hover: none) { .pad { display: grid; } }
+  .result { padding: 18px 20px; display: grid; gap: 14px; }
+  .result .verdict { font: 400 clamp(26px, 4vw, 36px)/1.1 var(--serif); }
+  .result .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .result .nums div { display: grid; gap: 3px; border-top: 1px solid var(--paper-line); padding-top: 8px; }
+  .result .nums .win .num { color: var(--accent-ink); }
+  .result .row-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  @media (max-width: 560px) {
+    .boards { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .board .paper { grid-template-columns: 1fr; padding: 8px; }
+    .board .side > :not(.rows-num) { display: none; }
+    .rows-num .num { font-size: 32px; }
+    canvas.grid { width: 100%; height: auto; }
+    .board .meta { display: none; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="topbar"><a class="brand" href="../"><img src="../nace.png" alt="">nace.ai · Drex Arcade</a><nav><a href="../beat/">Beat Drex</a><a href="../drexman/">Drexman</a><a href="../d-rex/">D-Rex</a><a href="./" aria-current="page">Drex Stack</a></nav></div>
-  <div class="sec-head"><div class="row"><span class="label">Workflow of choices</span><span class="meta">up to 34 options per piece</span></div><span class="subtitle">picks one drop from a list, with a probability for each</span></div>
+  <div class="sec-head"><div class="row"><span class="label">You vs Drex Max</span><span class="meta">same 150 pieces · same garbage rows</span></div><span class="subtitle">picks one drop from a list, with a probability for each</span></div>
   <div class="head">
-    <div><h1>Drex Stack</h1><p class="subtitle">For every piece the game lists each place it can drop and what would happen, including what the next piece could do. Drex picks one; the rules show its top three. A garbage row rises every 12 pieces.</p></div>
-    <div class="controls"><button class="btn primary" id="start" type="button">Play the game</button><button class="btn" id="speed" type="button">Speed 1×</button></div>
+    <div><h1>Drex Stack</h1><p class="subtitle">You stack the pieces yourself. Drex Max gets the same piece as a list of every place it can drop, with what each drop would do, and picks one. A garbage row rises every 12 pieces. Most rows cleared in 150 pieces wins.</p>
+      <p class="keys"><kbd>←</kbd> <kbd>→</kbd> move · <kbd>↑</kbd> turn · <kbd>↓</kbd> soft drop · <kbd>Space</kbd> drop · on a phone, the buttons under the boards</p></div>
+    <div><button class="btn primary" id="start" type="button">Start</button></div>
   </div>
   <div class="boards" id="boards"></div>
+  <div class="pad" id="pad"><button type="button" data-k="left" aria-label="Left">◀</button><button type="button" data-k="turn" aria-label="Turn">↻</button><button type="button" data-k="right" aria-label="Right">▶</button><button type="button" data-k="soft" aria-label="Soft drop">▼</button><button type="button" data-k="drop" aria-label="Drop">⤓</button></div>
+  <div class="paper result" id="result" hidden></div>
   <section class="cta">
     <p><b>One question, 34 options, a probability for each.</b> Ranking and picking from a list is what Drex does for agents. New accounts get $25 of credit.</p>
     <a class="btn accent" href="https://console.nace.ai/?utm_source=arcade&amp;utm_medium=game&amp;utm_campaign=drex10000&amp;utm_content=stack">Get an API key</a>
   </section>
   <footer class="wordmark"><span class="lockup"><img src="../nace.png" alt="Nace.AI"><span class="big">Drex <em>Max</em></span></span><span class="tag">drexmaxxing >>></span></footer>
-  <p class="note" id="note">Replay of one game recorded on 19 Oct 2026 with real Drex API answers, one request at a time (seed 33, 150 pieces). In a separate three-seed test with a shorter game description, Drex v2.0 averaged 62 of the roughly 71 rows 150 pieces allow and never topped out. Add <a href="?clip">?clip</a> to the address for a clean frame to screen-record.</p>
+  <p class="note" id="note">Drex Max's board replays one game recorded on 19 Oct 2026 with real Drex API answers, one request at a time (seed 33, 150 pieces); it places each piece when you place yours. Your board gets the same pieces in the same order and the same garbage rows. Add <a href="?clip">?clip</a> to the address for a clean frame to screen-record.</p>
 </div>
 <script type="module">
-import { W, H, SHAPES, GARBAGE_EVERY, emptyBoard, pieceSequence, garbageHoles, requestFor, normalize, addGarbage, holes, heights } from './engine.js';
+import { W, H, SHAPES, GARBAGE_EVERY, emptyBoard, pieceSequence, garbageHoles, requestFor, clearRows, normalize, addGarbage, holes, heights } from './engine.js';
 const replay = await fetch('replay.json').then((r) => r.json());
+const MODEL = 'drex-max', MAX = replay.maxPieces;
 const CELL = 22, CLEAR = { 1: '+1 row', 2: 'double', 3: 'triple', 4: 'quad!' };
-const BOARDS = [ { model: 'drex-max', name: 'Drex Max' }, { model: 'drex-v2.0', name: 'Drex v2.0' } ];
-const seq = pieceSequence(replay.seed, replay.maxPieces + 2), garbage = garbageHoles(replay.seed, 100);
+const seq = pieceSequence(replay.seed, MAX + 2), garbage = garbageHoles(replay.seed, 100);
 // The boards sit on cream paper, so the canvases draw with the paper tokens.
 const TOKENS = { bg: 'paper', surface: 'paper', ink: 'paper-ink', muted: 'paper-muted', line: 'paper-line', accent: 'accent-ink', amber: 'amber-ink', bad: 'bad-ink' };
 let colors = {};
 const readColors = () => { const s = getComputedStyle(document.documentElement); colors = Object.fromEntries(Object.entries(TOKENS).map(([k, v]) => [k, s.getPropertyValue('--' + v).trim()])); };
 readColors();
+const BEST_KEY = 'drex-arcade.stack.best';
+const readBest = () => { try { return Number(localStorage.getItem(BEST_KEY)) || 0; } catch { return 0; } };
+const saveBest = (n) => { try { localStorage.setItem(BEST_KEY, String(n)); } catch {} };
+const fits = (b, cells, ox, oy) => cells.every(([x, y]) => { const X = x + ox, Y = y + oy; return X >= 0 && X < W && Y < H && (Y < 0 || !b[Y][X]); });
 
 function makeBoard(cfg) {
-  const el = document.createElement('section'); el.className = 'board';
+  const el = document.createElement('section'); el.className = `board ${cfg.key}`;
+  const side = cfg.key === 'you'
+    ? `<div class="rows-num"><span class="num">0</span><span class="caps">rows cleared</span></div><div><span class="caps">Next</span><canvas class="next" width="64" height="32" style="display:block;margin-top:6px"></canvas></div><div class="stats"></div><p class="help">← → move · ↑ turn<br>↓ soft drop · Space drop</p>`
+    : `<div class="rows-num"><span class="num">0</span><span class="caps">rows cleared</span></div><div><span class="caps">Drex's top picks</span><div class="opts"></div></div><div class="stats"></div>`;
   el.innerHTML = `<div class="sec-head"><div class="row"><span class="label">${cfg.name}</span><span class="meta status">ready</span></div></div>
-    <div class="paper"><canvas class="grid" width="${W * CELL}" height="${H * CELL}"></canvas>
-    <div class="side"><div class="rows-num"><span class="num">0</span><span class="caps">rows cleared</span></div><div><span class="caps">Drex's top picks</span><div class="opts"></div></div><div><span class="caps">Next</span><canvas class="next" width="64" height="32" style="display:block;margin-top:6px"></canvas></div><div class="stats"></div></div><div class="toast"></div></div>`;
+    <div class="paper"><canvas class="grid" width="${W * CELL}" height="${H * CELL}"></canvas><div class="side">${side}</div><div class="toast"></div></div>`;
   document.getElementById('boards').appendChild(el);
-  return { cfg, run: replay.runs[cfg.model], ctx: el.querySelector('canvas.grid').getContext('2d'), nextCtx: el.querySelector('canvas.next').getContext('2d'), opts: el.querySelector('.opts'), stats: el.querySelector('.stats'), status: el.querySelector('.status'), rowsEl: el.querySelector('.rows-num .num'), toast: el.querySelector('.toast') };
+  const q = (s) => el.querySelector(s);
+  return { cfg, ctx: q('canvas.grid').getContext('2d'), canvas: q('canvas.grid'), nextCtx: q('canvas.next')?.getContext('2d'), opts: q('.opts'), stats: q('.stats'), status: q('.status'), rowsEl: q('.rows-num .num'), toast: q('.toast') };
 }
-function draw(g, ov) {
+const you = makeBoard({ key: 'you', name: 'You' }), drex = makeBoard({ key: 'drex', name: 'Drex Max' });
+const run = replay.runs[MODEL];
+
+function toast(g, n) { if (!n) return; g.toast.textContent = CLEAR[n]; g.toast.classList.add('show'); clearTimeout(g.toastT); g.toastT = setTimeout(() => g.toast.classList.remove('show'), 700); }
+function cellsOf(p) { return SHAPES[p.piece][p.rot]; }
+function draw(g) {
   const c = g.ctx; c.fillStyle = colors.bg; c.fillRect(0, 0, W * CELL, H * CELL);
   c.strokeStyle = colors.line; c.lineWidth = 1;
   for (let x = 1; x < W; x++) { c.beginPath(); c.moveTo(x * CELL + .5, 0); c.lineTo(x * CELL + .5, H * CELL); c.stroke(); }
   for (let y = 1; y < H; y++) { c.beginPath(); c.moveTo(0, y * CELL + .5); c.lineTo(W * CELL, y * CELL + .5); c.stroke(); }
-  (ov?.board ?? g.board).forEach((row, y) => row.forEach((v, x) => { if (!v) return; c.fillStyle = ov?.flash?.includes(y) ? colors.amber : v === 3 ? colors.muted : v === 2 ? colors.accent : colors.ink; c.fillRect(x * CELL + 1, y * CELL + 1, CELL - 2, CELL - 2); }));
-  if (ov?.ghost) { c.globalAlpha = .3; c.fillStyle = colors.accent; for (const [x, y] of ov.ghost.cells) c.fillRect((x + ov.ghost.ox) * CELL + 1, (y + ov.ghost.oy) * CELL + 1, CELL - 2, CELL - 2); c.globalAlpha = 1; }
+  g.board.forEach((row, y) => row.forEach((v, x) => { if (!v) return; c.fillStyle = v === 3 ? colors.muted : colors.ink; c.fillRect(x * CELL + 1, y * CELL + 1, CELL - 2, CELL - 2); }));
+  const cur = g.cur;
+  if (cur && !g.done) {
+    const cells = cellsOf(cur);
+    let gy = cur.y; while (fits(g.board, cells, cur.x, gy + 1)) gy++;
+    c.globalAlpha = .25; c.fillStyle = colors.accent; for (const [x, y] of cells) if (y + gy >= 0) c.fillRect((x + cur.x) * CELL + 1, (y + gy) * CELL + 1, CELL - 2, CELL - 2);
+    c.globalAlpha = 1; for (const [x, y] of cells) if (y + cur.y >= 0) c.fillRect((x + cur.x) * CELL + 1, (y + cur.y) * CELL + 1, CELL - 2, CELL - 2);
+  }
+  if (g.last) { c.fillStyle = colors.accent; for (const [x, y] of g.last.cells) if (g.board[y + g.last.oy]?.[x + g.last.ox]) c.fillRect((x + g.last.ox) * CELL + 1, (y + g.last.oy) * CELL + 1, CELL - 2, CELL - 2); }
   if (g.endText) { c.fillStyle = colors.surface; c.globalAlpha = .9; c.fillRect(0, H * CELL / 2 - 28, W * CELL, 56); c.globalAlpha = 1; c.fillStyle = g.over ? colors.bad : colors.accent; c.font = 'italic 24px "Instrument Serif", Georgia, serif'; c.textAlign = 'center'; c.fillText(g.endText, W * CELL / 2, H * CELL / 2 + 6); c.textAlign = 'left'; }
-  const n = g.nextCtx; n.clearRect(0, 0, 64, 32); n.fillStyle = colors.ink;
-  if (seq[g.i + 1]) for (const [x, y] of SHAPES[seq[g.i + 1]][0]) n.fillRect(x * 16 + 1, y * 16 + 1, 14, 14);
+  if (g.banner) { c.fillStyle = colors.ink; c.font = 'italic 72px "Instrument Serif", Georgia, serif'; c.textAlign = 'center'; c.fillText(g.banner, W * CELL / 2, H * CELL / 2 + 22); c.textAlign = 'left'; }
+  if (g.nextCtx) { const n = g.nextCtx; n.clearRect(0, 0, 64, 32); n.fillStyle = colors.ink; const p = seq[g.pieces + 1]; if (p && !g.done) for (const [x, y] of SHAPES[p][0]) n.fillRect(x * 16 + 1, y * 16 + 1, 14, 14); }
   g.rowsEl.textContent = g.lines;
-  const avg = g.ms.length ? Math.round(g.ms.reduce((a, b) => a + b, 0) / g.ms.length) : 0;
-  g.stats.innerHTML = `pieces <b>${g.pieces}</b> / ${replay.maxPieces} · holes <b>${holes(g.board)}</b> · tallest <b>${Math.max(...heights(g.board))}</b><br>best clear <b>${CLEAR[g.best] ?? '–'}</b><br>avg answer <b>${avg} ms</b>`;
+  const extra = g === drex ? `avg answer <b>${g.ms.length ? Math.round(g.ms.reduce((a, b) => a + b, 0) / g.ms.length) : 0} ms</b>` : `best <b>${readBest()}</b> rows`;
+  g.stats.innerHTML = `pieces <b>${g.pieces}</b> / ${MAX} · holes <b>${holes(g.board)}</b> · tallest <b>${Math.max(...heights(g.board))}</b><br>best clear <b>${CLEAR[g.best] ?? '–'}</b><br>${extra}`;
 }
-function showOptions(g, list, d) {
+
+// ---- Drex Max: places piece i when you place piece i, from the recording ----
+function drexStep() {
+  const g = drex; if (g.done) return;
+  const d = run[g.pieces];
+  const { list } = requestFor(g.board, seq, g.pieces, g.lines, replay.version);
+  if (!d || !list.length) return finishBoard(g, !list.length);
+  const pick = list.find((o) => o.key === d.choice) ?? list[0];
   const top = list.filter((o) => d.probs[o.key] !== undefined).sort((a, b) => d.probs[b.key] - d.probs[a.key]).slice(0, 3);
   g.opts.innerHTML = top.map((o) => { const [where, why] = o.text.split(': '); const p = d.probs[o.key]; return `<div class="opt ${o.key === d.choice ? 'pick' : ''}"><div class="row"><span>${where}</span><span>${Math.round(p * 100)}%</span></div><div class="why">${why}</div><div class="bar"><i style="width:${p * 100}%"></i></div></div>`; }).join('');
+  g.ms.push(d.ms); g.status.textContent = `${seq[g.pieces]} piece · answered in ${d.ms} ms`;
+  g.board = normalize(pick.after); g.lines += pick.cleared; g.best = Math.max(g.best, pick.cleared); g.pieces++;
+  g.last = pick.cleared ? null : pick; toast(g, pick.cleared);
+  if (g.pieces % GARBAGE_EVERY === 0) { const r = addGarbage(g.board, garbage[g.pieces / GARBAGE_EVERY]); if (r.toppedOut) return finishBoard(g, true); g.board = r.board; g.last = null; }
+  if (g.pieces >= MAX) finishBoard(g, false);
 }
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms / speed));
-let running = false, runId = 0, speed = 1;
-async function turn(g, id) {
-  if (!running || id !== runId) return;
-  const d = g.run[g.pieces];
-  const { list } = requestFor(g.board, seq, g.i, g.lines, replay.version);
-  if (!d || !list.length) return finish(g, !list.length);
-  g.status.textContent = `thinking about ${seq[g.i]}…`;
-  await sleep(Math.min(d.ms, 700));
-  if (id !== runId) return;
-  const pick = list.find((o) => o.key === d.choice) ?? list[0];
-  g.ms.push(d.ms); g.status.textContent = `answered in ${d.ms} ms`;
-  showOptions(g, list, d);
-  draw(g, { ghost: pick }); await sleep(200);
-  const locked = g.board.map((r) => r.slice()); for (const [x, y] of pick.cells) locked[y + pick.oy][x + pick.ox] = 2;
-  const full = locked.map((r, y) => (r.every((c) => c) ? y : -1)).filter((y) => y >= 0);
-  if (full.length) { draw(g, { board: locked, flash: full }); g.toast.textContent = CLEAR[full.length]; g.toast.classList.add('show'); setTimeout(() => g.toast.classList.remove('show'), 700); await sleep(260); }
-  g.board = normalize(pick.after); g.lines += pick.cleared; g.best = Math.max(g.best, pick.cleared); g.pieces++; g.i++;
-  if (g.pieces % GARBAGE_EVERY === 0) { const r = addGarbage(g.board, garbage[g.pieces / GARBAGE_EVERY]); if (r.toppedOut) return finish(g, true); g.board = r.board; }
-  draw(g);
-  setTimeout(() => turn(g, id), 30);
+
+// ---- You: a falling piece with gravity, same pieces and garbage ----
+function spawn() {
+  const g = you, piece = seq[g.pieces], cells = SHAPES[piece][0], w = Math.max(...cells.map(([x]) => x)) + 1;
+  g.cur = { piece, rot: 0, x: Math.floor((W - w) / 2), y: 0 };
+  if (!fits(g.board, cells, g.cur.x, 0)) { g.cur = null; finishBoard(g, true); }
 }
-function finish(g, toppedOut) {
-  g.over = toppedOut; g.done = true;
+function tryMove(dx, dy) { const g = you, c = g.cur; if (!c || phase !== 'run') return false; if (fits(g.board, cellsOf(c), c.x + dx, c.y + dy)) { c.x += dx; c.y += dy; return true; } return false; }
+function turn() {
+  const c = you.cur; if (!c || phase !== 'run') return;
+  const rot = (c.rot + 1) % SHAPES[c.piece].length, cells = SHAPES[c.piece][rot];
+  for (const k of [0, -1, 1, -2, 2]) if (fits(you.board, cells, c.x + k, c.y)) { c.rot = rot; c.x += k; return; }
+}
+function lock() {
+  const g = you, c = g.cur; if (!c) return;
+  const cells = cellsOf(c);
+  if (cells.some(([, y]) => y + c.y < 0)) return finishBoard(g, true);
+  const placed = g.board.map((r) => r.slice()); for (const [x, y] of cells) placed[y + c.y][x + c.x] = 2;
+  const { board, cleared } = clearRows(placed);
+  g.board = normalize(board); g.lines += cleared; g.best = Math.max(g.best, cleared); g.pieces++;
+  g.last = cleared ? null : { cells, ox: c.x, oy: c.y }; toast(g, cleared); g.cur = null;
+  drexStep();
+  if (g.pieces % GARBAGE_EVERY === 0) { const r = addGarbage(g.board, garbage[g.pieces / GARBAGE_EVERY]); if (r.toppedOut) return finishBoard(g, true); g.board = r.board; g.last = null; }
+  if (g.pieces >= MAX) return finishBoard(g, false);
+  spawn();
+}
+const hardDrop = () => { if (!you.cur || phase !== 'run') return; while (tryMove(0, 1)); lock(); gravityAcc = 0; };
+const gravityMs = () => (soft ? 35 : Math.max(110, 750 - you.pieces * 4));
+
+function finishBoard(g, toppedOut) {
+  if (g.done) return;
+  g.over = toppedOut; g.done = true; g.cur = null;
   g.endText = toppedOut ? `topped out · ${g.lines} rows` : `${g.lines} rows in ${g.pieces} pieces`;
-  g.status.textContent = toppedOut ? `topped out after ${g.pieces} pieces` : 'end of recording, still alive';
-  draw(g);
-  if (games.every((x) => x.done)) { running = false; document.getElementById('start').textContent = 'Replay the game'; }
+  g.status.textContent = toppedOut ? `topped out after ${g.pieces} pieces` : 'all 150 pieces placed';
+  if (g === you) {
+    saveBest(Math.max(readBest(), g.lines));
+    // Drex plays out the rest of its recording quickly, then the result shows
+    phase = 'replay';
+    const ff = () => { if (drex.done) { phase = 'over'; draw(drex); draw(you); return showResult(); } drexStep(); draw(drex); setTimeout(ff, 25); };
+    ff();
+  }
 }
-const games = BOARDS.map(makeBoard);
-function reset() { running = false; runId++; for (const g of games) { Object.assign(g, { board: emptyBoard(), i: 0, lines: 0, best: 0, pieces: 0, over: false, done: false, endText: '', ms: [] }); g.status.textContent = 'ready'; g.opts.innerHTML = ''; draw(g); } }
-document.getElementById('start').addEventListener('click', () => { reset(); running = true; const id = runId; games.forEach((g) => turn(g, id)); });
-document.getElementById('speed').addEventListener('click', (e) => { speed = speed === 1 ? 2 : speed === 2 ? 4 : 1; e.currentTarget.textContent = `Speed ${speed}×`; });
+function showResult() {
+  const won = you.lines > drex.lines, tie = you.lines === drex.lines;
+  const verdict = won ? `You beat Drex Max by ${you.lines - drex.lines} row${you.lines - drex.lines === 1 ? '' : 's'}.` : tie ? 'A tie with Drex Max.' : `Drex Max cleared ${drex.lines} rows. You cleared ${you.lines}.`;
+  const url = location.origin + location.pathname;
+  const share = won ? `I beat Drex Max at Drex Stack: ${you.lines} rows vs ${drex.lines}, same 150 pieces. Your turn: ${url}` : `I cleared ${you.lines} rows in Drex Stack. Drex Max, a decision model picking each drop from a list, cleared ${drex.lines} with the same pieces. Beat it: ${url}`;
+  const el = document.getElementById('result'); el.hidden = false;
+  el.innerHTML = `<span class="caps">Result</span><span class="verdict">${verdict}</span>
+    <div class="nums"><div class="${won ? 'win' : ''}"><span class="num">${you.lines}</span><span class="caps">You · ${you.over ? `topped out at piece ${you.pieces}` : `${you.pieces} pieces`} · best ${readBest()}</span></div>
+    <div class="${won ? '' : 'win'}"><span class="num">${drex.lines}</span><span class="caps">Drex Max · ${drex.pieces} pieces · ${Math.round(drex.ms.reduce((a, b) => a + b, 0) / drex.ms.length)} ms avg answer</span></div></div>
+    <div class="row-btns"><a class="btn primary" target="_blank" rel="noopener" href="https://x.com/intent/post?text=${encodeURIComponent(share)}">Post on X</a><button class="btn" type="button" id="again">Play again</button></div>`;
+  document.getElementById('again').onclick = start;
+  document.getElementById('start').textContent = 'Play again';
+}
+
+// ---- Loop and controls ----
+let phase = 'idle', soft = false, gravityAcc = 0, last = 0, countFrom = 0, loopId = 0;
+const loop = (id) => requestAnimationFrame((now) => frame(now, id));
+function frame(now, id) {
+  if (id !== loopId) return;
+  if (phase === 'count') {
+    const left = 3 - Math.floor((now - countFrom) / 1000);
+    if (left > 0) { you.banner = drex.banner = String(left); draw(you); draw(drex); return loop(id); }
+    you.banner = drex.banner = ''; phase = 'run'; last = now; spawn(); you.status.textContent = 'your move'; drex.status.textContent = 'waiting for your first piece';
+  }
+  if (phase === 'run') {
+    gravityAcc += Math.min(250, now - last); last = now;
+    while (phase === 'run' && gravityAcc >= gravityMs()) { gravityAcc -= gravityMs(); if (!tryMove(0, 1)) lock(); }
+  }
+  draw(you); draw(drex);
+  if (phase === 'run' || phase === 'count') loop(id);
+}
+function reset() {
+  for (const g of [you, drex]) { Object.assign(g, { board: emptyBoard(), lines: 0, best: 0, pieces: 0, over: false, done: false, endText: '', banner: '', ms: [], cur: null, last: null }); g.status.textContent = 'ready'; if (g.opts) g.opts.innerHTML = ''; draw(g); }
+  document.getElementById('result').hidden = true;
+}
+function start() {
+  if (phase === 'count' || phase === 'replay') return;
+  reset(); phase = 'count'; countFrom = performance.now(); gravityAcc = 0; soft = false;
+  document.getElementById('start').textContent = 'Restart';
+  loop(++loopId);
+}
+const ACT = { arrowleft: () => tryMove(-1, 0), a: () => tryMove(-1, 0), arrowright: () => tryMove(1, 0), d: () => tryMove(1, 0), arrowup: turn, w: turn, x: turn, ' ': hardDrop };
+addEventListener('keydown', (e) => {
+  if (phase !== 'run') { if (e.key === ' ' && (phase === 'idle' || phase === 'over') && document.activeElement?.tagName !== 'BUTTON') { e.preventDefault(); start(); } return; }
+  if (e.key === 'ArrowDown' || e.key === 's') { e.preventDefault(); soft = true; return; }
+  const f = ACT[e.key.toLowerCase()]; if (!f) return;
+  e.preventDefault(); if (e.key === ' ' && e.repeat) return; f();
+});
+addEventListener('keyup', (e) => { if (e.key === 'ArrowDown' || e.key === 's') soft = false; });
+const PAD = { left: () => tryMove(-1, 0), right: () => tryMove(1, 0), turn, drop: hardDrop };
+for (const b of document.querySelectorAll('#pad button')) {
+  const k = b.dataset.k; let rep = null;
+  b.addEventListener('pointerdown', (e) => {
+    e.preventDefault(); b.classList.add('on');
+    if (phase === 'idle' || phase === 'over') return start();
+    if (k === 'soft') { soft = true; return; }
+    PAD[k](); if (k === 'left' || k === 'right') rep = setInterval(PAD[k], 110);
+  });
+  const up = () => { b.classList.remove('on'); clearInterval(rep); if (k === 'soft') soft = false; };
+  b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('pointerleave', up);
+}
+document.getElementById('start').addEventListener('click', (e) => { e.currentTarget.blur(); if (phase === 'run') phase = 'idle'; start(); });
 reset();
-document.fonts.ready.then(() => { if (!running) games.forEach((g) => draw(g)); });
+document.fonts.ready.then(() => { if (phase === 'idle') { draw(you); draw(drex); } });
 </script>
 </body>
 </html>

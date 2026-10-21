@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>D-Rex</title>
-<meta name="description" content="Drex Max and Drex v2.0 race in an endless runner where the time to answer keeps shrinking.">
-<meta property="og:title" content="D-Rex: Drex Max vs Drex v2.0">
-<meta property="og:description" content="An endless runner where a decision model reads every obstacle and the time to answer keeps shrinking.">
+<meta name="description" content="Race Drex Max, a decision model by Nace.AI, in an endless runner that keeps speeding up.">
+<meta property="og:title" content="D-Rex: you vs Drex Max">
+<meta property="og:description" content="Same obstacles, same speed. You react; Drex Max reads each obstacle as text and answers over the network. Who runs further?">
 <meta property="og:image" content="https://drex-arcade.vercel.app/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../favicon.png" type="image/png">
@@ -29,47 +29,70 @@
   .result .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
   .result .nums div { display: grid; gap: 3px; border-top: 1px solid var(--paper-line); padding-top: 8px; }
   .result .nums .win .num { color: var(--accent-ink); }
+  .result .row-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .lane.you .label { color: var(--ink); }
+  .pad { display: none; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pad button { font: 700 15px var(--display); letter-spacing: .06em; text-transform: uppercase; padding: 20px 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 4px; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .pad button.on { border-color: var(--accent); color: var(--accent); }
+  @media (hover: none) { .pad { display: grid; } }
+  .keys { font: 12.5px var(--display); color: var(--muted); }
+  .keys kbd { font: 600 11.5px var(--display); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 1px 6px; color: var(--ink); }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="topbar"><a class="brand" href="../"><img src="../nace.png" alt="">nace.ai · Drex Arcade</a><nav><a href="../beat/">Beat Drex</a><a href="../drexman/">Drexman</a><a href="./" aria-current="page">D-Rex</a><a href="../stack/">Drex Stack</a></nav></div>
-  <div class="sec-head"><div class="row"><span class="label">Real-time decisions</span><span class="meta">real time · same obstacles</span></div><span class="subtitle">jump, duck or do nothing, decided per obstacle</span></div>
+  <div class="sec-head"><div class="row"><span class="label">You vs Drex Max</span><span class="meta">real time · same obstacles · same speed</span></div><span class="subtitle">jump, duck or do nothing, decided per obstacle</span></div>
   <div class="head">
-    <div><h1>D-Rex</h1><p class="subtitle">Every obstacle is described in words. Drex picks jump, duck or nothing. The game keeps speeding up, so the time to answer keeps shrinking. Too late, and the dino runs into it.</p></div>
-    <div><button class="btn primary" id="start" type="button">Play the race</button></div>
+    <div><h1>D-Rex</h1><p class="subtitle">You see the obstacles. Drex Max only gets each one described in words and answers jump, duck or nothing over the network. The game keeps speeding up, so the time to react keeps shrinking for both of you.</p><p class="keys" style="margin-top:10px"><kbd>Space</kbd> or <kbd>↑</kbd> jump · <kbd>↓</kbd> duck (hold) · on a phone, the buttons under the race</p></div>
+    <div><button class="btn primary" id="start" type="button">Start the race</button></div>
   </div>
   <div id="lanes"></div>
+  <div class="pad" id="pad"><button type="button" data-k="jump">Jump</button><button type="button" data-k="duck">Duck</button></div>
   <div class="paper result" id="result" hidden></div>
   <section class="cta">
     <p><b>Fast, typed decisions for agents:</b> pick a tool, route a ticket, gate an action. New accounts get $25 of credit.</p>
     <a class="btn accent" href="https://console.nace.ai/?utm_source=arcade&amp;utm_medium=game&amp;utm_campaign=drex10000&amp;utm_content=d-rex">Get an API key</a>
   </section>
   <footer class="wordmark"><span class="lockup"><img src="../nace.png" alt="Nace.AI"><span class="big">Drex <em>Max</em></span></span><span class="tag">drexmaxxing >>></span></footer>
-  <p class="note">Replay of real Drex API answers recorded on 19 Oct 2026, one request at a time. Each answer arrives in the game after its measured round-trip time, so speed matters exactly as it did live. Add <a href="?clip">?clip</a> to the address for a clean frame to screen-record.</p>
+  <p class="note">Drex Max's lane replays real Drex API answers recorded on 19 Oct 2026, one request at a time (seed 20261020). Each answer arrives after its measured round-trip time, so its speed counts exactly as it did live. Your lane runs on the same obstacles and the same physics. Add <a href="?clip">?clip</a> to the address for a clean frame to screen-record.</p>
 </div>
 <script type="module">
-import { W, H, GROUND, DINO_X, DUCK_H, DINO_H, ASK_PX, SPEED0, STEP, schedule, speedAt, travelled, obstacleX, newLane, stepLane } from './engine.js';
+import { W, H, GROUND, DINO_X, DUCK_H, DINO_H, ASK_PX, SPEED0, STEP, schedule, speedAt, travelled, obstacleX, newLane, stepLane, newHumanLane, stepHumanLane, simulate } from './engine.js';
 const replay = await fetch('replay.json').then((r) => r.json());
-const LANES = [ { model: 'drex-max', name: 'Drex Max' }, { model: 'drex-v2.0', name: 'Drex v2.0' } ];
+const MODEL = 'drex-max';
 const sched = schedule(replay.seed, 400);
+const drexFinal = simulate(replay.runs[MODEL], sched); // where Drex Max's recorded run ends
 const SERIF = '"Instrument Serif", Georgia, serif', MONO = '"JetBrains Mono", ui-monospace, monospace';
 // The canvases sit on cream paper, so they draw with the paper tokens.
 const TOKENS = { surface: 'paper', ink: 'paper-ink', muted: 'paper-muted', line: 'paper-line', accent: 'accent-ink', bad: 'bad-ink' };
 let colors = {};
 const readColors = () => { const s = getComputedStyle(document.documentElement); colors = Object.fromEntries(Object.entries(TOKENS).map(([k, v]) => [k, s.getPropertyValue('--' + v).trim()])); };
 readColors();
+const fmt = (n) => n.toLocaleString('en-US');
+const BEST_KEY = 'drex-arcade.d-rex.best';
+const readBest = () => { try { return Number(localStorage.getItem(BEST_KEY)) || 0; } catch { return 0; } };
+const saveBest = (n) => { try { localStorage.setItem(BEST_KEY, String(n)); } catch {} };
 
+const LANES = [ { key: 'you', name: 'You' }, { key: 'drex', name: 'Drex Max' } ];
 const lanes = LANES.map((cfg) => {
   const el = document.createElement('section');
-  el.className = 'lane';
+  el.className = `lane ${cfg.key}`;
   el.innerHTML = `<div class="sec-head"><div class="row"><span class="label">${cfg.name}</span><span class="meta stats"></span></div></div><div class="paper"><canvas width="${W}" height="${H}"></canvas><div class="log"></div></div>`;
   document.getElementById('lanes').appendChild(el);
-  return { cfg, run: replay.runs[cfg.model], ctx: el.querySelector('canvas').getContext('2d'), statsEl: el.querySelector('.stats'), logEl: el.querySelector('.log') };
+  return { cfg, ctx: el.querySelector('canvas').getContext('2d'), canvas: el.querySelector('canvas'), statsEl: el.querySelector('.stats'), logEl: el.querySelector('.log') };
 });
-function reset() { for (const l of lanes) { Object.assign(l, newLane(l.run)); l.logEl.textContent = l.log; draw(l, 0); } document.getElementById('result').hidden = true; }
+const [you, drex] = lanes;
+const input = { jump: false, duck: false };
+function reset() {
+  Object.assign(you, newHumanLane());
+  Object.assign(drex, newLane(replay.runs[MODEL]));
+  input.jump = false; input.duck = false;
+  for (const l of lanes) { l.logEl.textContent = l.log; draw(l, 0); }
+  document.getElementById('result').hidden = true;
+}
 
-function draw(l, t) {
+function draw(l, t, banner) {
   const c = l.ctx, tt = l.alive ? t : l.diedAt;
   c.fillStyle = colors.surface; c.fillRect(0, 0, W, H);
   c.fillStyle = colors.ink; c.fillRect(0, GROUND, W, 2);
@@ -114,35 +137,83 @@ function draw(l, t) {
   c.fillStyle = colors.surface; c.fillRect(dx + 32, dy + 3, 3, 3);
   const score = Math.floor(travelled(tt) / 10), spd = speedAt(tt);
   c.textAlign = 'right';
-  c.fillStyle = colors.ink; c.font = `34px ${SERIF}`; c.fillText(score.toLocaleString('en-US'), W - 16, 38);
+  c.fillStyle = colors.ink; c.font = `34px ${SERIF}`; c.fillText(fmt(score), W - 16, 38);
   c.fillStyle = colors.muted; c.font = `500 10.5px ${MONO}`; c.fillText(`DISTANCE · ${(spd / SPEED0).toFixed(1)}× SPEED`, W - 16, 54);
+  c.textAlign = 'center';
+  if (!l.alive) { c.fillStyle = colors.bad; c.font = `italic 34px ${SERIF}`; c.fillText('game over', W / 2, 100); }
+  else if (banner) { c.fillStyle = colors.ink; c.font = `italic 56px ${SERIF}`; c.fillText(banner, W / 2, 112); }
   c.textAlign = 'left';
-  if (!l.alive) { c.fillStyle = colors.bad; c.font = `italic 34px ${SERIF}`; c.textAlign = 'center'; c.fillText('game over', W / 2, 100); c.textAlign = 'left'; }
-  const avg = l.latency.length ? Math.round(l.latency.reduce((a, b) => a + b, 0) / l.latency.length) : 0;
-  l.statsEl.textContent = `${(ASK_PX / spd).toFixed(2)} s to answer · ${l.latency.length} decisions · ${l.late} late · ${avg} ms avg`;
+  if (l.human) l.statsEl.textContent = `${(ASK_PX / spd).toFixed(2)} s from first sight to contact · ${l.jumps} jumps`;
+  else {
+    const avg = l.latency.length ? Math.round(l.latency.reduce((a, b) => a + b, 0) / l.latency.length) : 0;
+    l.statsEl.textContent = `${(ASK_PX / spd).toFixed(2)} s to answer · ${l.latency.length} decisions · ${l.late} late · ${avg} ms avg`;
+  }
 }
 
-let running = false, simT = 0, acc = 0, last = 0;
-function frame(now) {
-  if (!running) return;
-  acc += Math.min(0.5, (now - last) / 1000); last = now; // catch up on slow or throttled frames
-  while (acc >= STEP) { simT += STEP; acc -= STEP; for (const l of lanes) stepLane(l, simT, sched); }
+// Controls: keyboard, the touch pad, or a tap on your own lane.
+const press = () => { if (phase === 'run') input.jump = true; };
+const KEYS_JUMP = new Set([' ', 'ArrowUp', 'w', 'W']), KEYS_DUCK = new Set(['ArrowDown', 's', 'S']);
+addEventListener('keydown', (e) => {
+  if (KEYS_JUMP.has(e.key)) { if (phase === 'idle' || phase === 'over') { if (e.key === ' ' && !e.repeat && document.activeElement?.tagName !== 'BUTTON') { e.preventDefault(); start(); } return; } e.preventDefault(); if (!e.repeat) press(); }
+  if (KEYS_DUCK.has(e.key) && phase !== 'idle') { e.preventDefault(); input.duck = true; }
+});
+addEventListener('keyup', (e) => { if (KEYS_DUCK.has(e.key)) input.duck = false; });
+for (const b of document.querySelectorAll('#pad button')) {
+  const k = b.dataset.k;
+  b.addEventListener('pointerdown', (e) => { e.preventDefault(); b.classList.add('on'); if (k === 'jump') { if (phase === 'run') press(); else if (phase !== 'count') start(); } else input.duck = true; });
+  const up = () => { b.classList.remove('on'); if (k === 'duck') input.duck = false; };
+  b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('pointerleave', up);
+}
+you.canvas.addEventListener('pointerdown', (e) => { if (phase === 'run') { e.preventDefault(); press(); } });
+
+let phase = 'idle', simT = 0, acc = 0, last = 0, countFrom = 0, youResult = null, loopId = 0;
+const loop = (id) => requestAnimationFrame((now) => frame(now, id));
+function frame(now, id) {
+  if (id !== loopId) return; // a newer race took over
+  if (phase === 'count') {
+    const left = 3 - Math.floor((now - countFrom) / 1000);
+    if (left > 0) { for (const l of lanes) draw(l, 0, String(left)); return loop(id); }
+    phase = 'run'; last = now;
+  }
+  acc += Math.min(0.25, (now - last) / 1000); last = now;
+  while (acc >= STEP) {
+    simT += STEP; acc -= STEP;
+    stepHumanLane(you, simT, sched, input);
+    stepLane(drex, simT, sched);
+    if (!you.alive && !youResult) youResult = showResult();
+    if (!you.alive && !drex.alive) break;
+  }
   for (const l of lanes) { draw(l, simT); if (l.logEl.textContent !== l.log) l.logEl.textContent = l.log; }
-  if (lanes.every((l) => !l.alive)) { running = false; showResult(); return; }
-  requestAnimationFrame(frame);
+  if (!you.alive && !drex.alive) { phase = 'over'; youResult = showResult(); return; }
+  loop(id);
+}
+function start() {
+  if (phase === 'count' || phase === 'run') return;
+  reset(); simT = 0; acc = 0; youResult = null; phase = 'count'; countFrom = performance.now();
+  document.getElementById('start').textContent = 'Race again';
+  loop(++loopId);
 }
 function showResult() {
-  const rs = lanes.map((l) => ({ name: l.cfg.name, score: Math.floor(travelled(l.diedAt) / 10), speed: (l.diedSpeed / SPEED0).toFixed(1), answer: (ASK_PX / l.diedSpeed).toFixed(2) }));
-  const win = rs[0].score >= rs[1].score ? rs[0] : rs[1], lose = win === rs[0] ? rs[1] : rs[0];
+  const mine = Math.floor(travelled(you.diedAt) / 10), mySpeed = (you.diedSpeed / SPEED0).toFixed(1);
+  const drexDone = !drex.alive, drexScore = drexDone ? Math.floor(travelled(drex.diedAt) / 10) : drexFinal.score;
+  const drexSpeed = drexDone ? (drex.diedSpeed / SPEED0).toFixed(1) : drexFinal.speed.toFixed(1);
+  const best = Math.max(readBest(), mine); saveBest(best);
+  const won = mine > drexScore;
+  const verdict = won ? `You beat Drex Max by ${fmt(mine - drexScore)}.` : `Drex Max ran ${fmt(drexScore)}. You ran ${fmt(mine)}.`;
+  const url = location.origin + location.pathname;
+  const share = won ? `I outran Drex Max in D-Rex: ${fmt(mine)} vs ${fmt(drexScore)}. Your turn: ${url}` : `I ran ${fmt(mine)} in D-Rex. Drex Max, a decision model that only gets the obstacles described in words, ran ${fmt(drexScore)}. Beat it: ${url}`;
   const el = document.getElementById('result');
   el.hidden = false;
-  el.innerHTML = `<span class="caps">Result</span><span class="verdict">${win.name} ran to ${win.score.toLocaleString('en-US')}.</span>
-    <div class="nums">${rs.map((r) => `<div class="${r === win ? 'win' : ''}"><span class="num">${r.score.toLocaleString('en-US')}</span><span class="caps">${r.name} · ${r.speed}× speed · ${r.answer} s to answer at the end</span></div>`).join('')}</div>`;
-  document.getElementById('start').textContent = 'Replay the race';
+  el.innerHTML = `<span class="caps">Result</span><span class="verdict">${verdict}</span>
+    <div class="nums"><div class="${won ? 'win' : ''}"><span class="num">${fmt(mine)}</span><span class="caps">You · ${mySpeed}× speed · best ${fmt(best)}</span></div>
+    <div class="${won ? '' : 'win'}"><span class="num">${fmt(drexScore)}</span><span class="caps">Drex Max · ${drexSpeed}× speed${drexDone ? '' : ' · still running'}</span></div></div>
+    <div class="row-btns"><a class="btn primary" target="_blank" rel="noopener" href="https://x.com/intent/post?text=${encodeURIComponent(share)}">Post on X</a><button class="btn" type="button" id="again">Race again</button></div>`;
+  document.getElementById('again').onclick = () => { phase = phase === 'run' ? 'over' : phase; start(); };
+  return true;
 }
-document.getElementById('start').addEventListener('click', () => { if (running) return; reset(); simT = 0; acc = 0; running = true; last = performance.now(); requestAnimationFrame(frame); });
+document.getElementById('start').addEventListener('click', (e) => { e.currentTarget.blur(); if (phase === 'run') phase = 'over'; start(); });
 reset();
-document.fonts.ready.then(() => { if (!running) for (const l of lanes) draw(l, 0); });
+document.fonts.ready.then(() => { if (phase === 'idle') for (const l of lanes) draw(l, 0); });
 </script>
 </body>
 </html>

@@ -98,6 +98,15 @@ export function stepLane(l, t, sched) {
     }
   }
   if (l.ducking && ![...l.decided.entries()].some(([o, r]) => r.duckFor === o && obstacleX(o, t) + o.kind.w > DINO_X - 4)) l.ducking = false;
+  const o = moveAndHit(l, t, sched);
+  if (o) {
+    const r = l.decided.get(o);
+    l.log = `crashed into “${o.say}”` + (r?.lateMarked ? (r.status === 'ready' ? `: answered ${r.choice.toUpperCase()}, but ${r.d.ms} ms was too late at this speed` : ': the answer did not arrive in time') : r?.status === 'ready' ? ` after choosing ${r.choice.toUpperCase()}` : '');
+  }
+}
+/** Gravity for one STEP, then the crash check; same rules for Drex and for a person. Returns the obstacle hit, if any. */
+function moveAndHit(l, t, sched) {
+  const speed = speedAt(t);
   if (l.y > 0 || l.vy > 0) { l.vy -= G * STEP; l.y = Math.max(0, l.y + l.vy * STEP); if (l.y === 0) l.vy = 0; }
   const duck = l.ducking && l.y === 0, dw = duck ? DUCK_W : DINO_W, dh = duck ? DUCK_H : DINO_H;
   for (const o of sched) {
@@ -106,11 +115,28 @@ export function stepLane(l, t, sched) {
     if (x > DINO_X + dw || x + o.kind.w < DINO_X) continue;
     if (DINO_X + 4 < x + o.kind.w - 2 && DINO_X + dw - 4 > x + 2 && l.y + 2 < o.kind.lift + o.kind.h && l.y + dh - 2 > o.kind.lift) {
       l.alive = false; l.diedAt = t; l.diedSpeed = speed;
-      const r = l.decided.get(o);
-      l.log = `crashed into “${o.say}”` + (r?.lateMarked ? (r.status === 'ready' ? `: answered ${r.choice.toUpperCase()}, but ${r.d.ms} ms was too late at this speed` : ': the answer did not arrive in time') : r?.status === 'ready' ? ` after choosing ${r.choice.toUpperCase()}` : '');
-      return;
+      return o;
     }
   }
+  return null;
+}
+
+// ---- A person's lane: same obstacles and physics, moves come from the keyboard or touch instead of Drex. ----
+export function newHumanLane() {
+  return { human: true, alive: true, y: 0, vy: 0, ducking: false, decided: new Map(), late: 0, latency: [], jumps: 0, diedAt: null, diedSpeed: 0, log: 'Space or ↑ to jump, ↓ to duck' };
+}
+/** input: { jump: bool (a press waiting to be used), duck: bool (held) }. A press is kept for 0.15 s so an early tap still jumps. */
+export function stepHumanLane(l, t, sched, input) {
+  if (!l.alive) return;
+  if (input.jump) {
+    if (l.y === 0 && l.vy === 0) { l.vy = JUMP_V; l.jumps++; input.jump = false; input.since = undefined; }
+    else if (input.since === undefined) input.since = t;
+    else if (t - input.since > 0.15) { input.jump = false; input.since = undefined; }
+  }
+  l.ducking = input.duck;
+  if (input.duck && l.y > 0) l.vy -= 2 * G * STEP; // holding duck in the air drops faster, as in the original game
+  const o = moveAndHit(l, t, sched);
+  if (o) l.log = `you ran into “${o.say}”`;
 }
 /** Run a whole recorded lane without drawing: where and how it ends. */
 export function simulate(run, sched, maxSeconds = 300) {
